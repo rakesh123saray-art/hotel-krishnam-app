@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Krishnam Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f4f7;
+        }
+
+        .header {
+            background: #8b0000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 26px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        .card h2 {
+            color: #8b0000;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #8b0000;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #b22222;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Hotel Krishnam</h1>
+        <p>Hotel Management System</p>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>Dashboard</h2>
+            <p>Welcome to Hotel Krishnam Management App</p>
+        </div>
+
+        <div class="card">
+            <h2>Hotel Management</h2>
+
+            <div class="buttons">
+                <button onclick="alert('Room Management')">
+                    🏨 Rooms
+                </button>
+
+                <button onclick="alert('New Booking')">
+                    📝 New Booking
+                </button>
+
+                <button onclick="alert('Booking List')">
+                    📋 Bookings
+                </button>
+
+                <button onclick="alert('Customer Details')">
+                    👤 Customers
+                </button>
+
+                <button onclick="alert('Check In')">
+                    ✅ Check-In
+                </button>
+
+                <button onclick="alert('Check Out')">
+                    🚪 Check-Out
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Hotel Krishnam | Hotel Management System
+    </div>
+
+</body>
+</html>
