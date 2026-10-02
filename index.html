@@ -1,134 +1,274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Krishnam Management</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Krishnam Management</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
 
-        body {
-            background: #f2f4f7;
-        }
+body{
+    background:#f2f4f7;
+    color:#333;
+}
 
-        .header {
-            background: #8b0000;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+.header{
+    background:#8b0000;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
 
-        .header h1 {
-            font-size: 26px;
-        }
+.header h1{
+    font-size:28px;
+}
 
-        .header p {
-            margin-top: 5px;
-            font-size: 14px;
-        }
+.header p{
+    margin-top:5px;
+}
 
-        .container {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
 
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px #ccc;
-        }
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px #ccc;
+}
 
-        .card h2 {
-            color: #8b0000;
-            margin-bottom: 10px;
-        }
+h2{
+    color:#8b0000;
+    margin-bottom:15px;
+}
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
+.room-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+}
 
-        button {
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background: #8b0000;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+input,select{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:7px;
+    font-size:16px;
+}
 
-        button:hover {
-            background: #b22222;
-        }
+button{
+    border:none;
+    border-radius:7px;
+    padding:12px 18px;
+    background:#8b0000;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-    </style>
+button:hover{
+    background:#b22222;
+}
+
+.room-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+.room{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:15px;
+    background:#fafafa;
+}
+
+.room h3{
+    color:#8b0000;
+    margin-bottom:8px;
+}
+
+.status{
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:20px;
+    margin-top:8px;
+    font-size:14px;
+}
+
+.available{
+    background:#d4edda;
+    color:#155724;
+}
+
+.booked{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+.cleaning{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.delete{
+    margin-top:10px;
+    background:#555;
+    font-size:14px;
+}
+
+.footer{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
+
+@media(max-width:700px){
+    .room-form{
+        grid-template-columns:1fr;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>Hotel Krishnam</h1>
-        <p>Hotel Management System</p>
+<div class="header">
+    <h1>Hotel Krishnam</h1>
+    <p>Hotel Management System</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+    <h2>🏨 Room Management</h2>
+
+    <div class="room-form">
+        <input type="text" id="roomNumber" placeholder="Room No.">
+
+        <select id="roomType">
+            <option value="AC">AC Room</option>
+            <option value="Non-AC">Non-AC Room</option>
+        </select>
+
+        <select id="roomStatus">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked</option>
+            <option value="Cleaning">Cleaning</option>
+        </select>
+
+        <button onclick="addRoom()">Add Room</button>
     </div>
+</div>
 
-    <div class="container">
+<div class="card">
+    <h2>Rooms</h2>
 
-        <div class="card">
-            <h2>Dashboard</h2>
-            <p>Welcome to Hotel Krishnam Management App</p>
+    <div id="roomList" class="room-list"></div>
+</div>
+
+</div>
+
+<div class="footer">
+    Hotel Krishnam | Hotel Management System
+</div>
+
+<script>
+
+let rooms = [
+    {number:"101", type:"Non-AC", status:"Available"},
+    {number:"102", type:"Non-AC", status:"Available"},
+    {number:"201", type:"AC", status:"Available"},
+    {number:"202", type:"AC", status:"Available"},
+    {number:"203", type:"AC", status:"Available"},
+    {number:"204", type:"AC", status:"Available"},
+    {number:"301", type:"AC", status:"Available"},
+    {number:"302", type:"AC", status:"Available"},
+    {number:"303", type:"AC", status:"Available"},
+    {number:"304", type:"AC", status:"Available"}
+];
+
+function showRooms(){
+
+    const list = document.getElementById("roomList");
+
+    list.innerHTML = "";
+
+    rooms.forEach((room,index)=>{
+
+        let statusClass = room.status.toLowerCase();
+
+        list.innerHTML += `
+        <div class="room">
+
+            <h3>Room ${room.number}</h3>
+
+            <p><b>Type:</b> ${room.type}</p>
+
+            <span class="status ${statusClass}">
+                ${room.status}
+            </span>
+
+            <br>
+
+            <button class="delete" onclick="deleteRoom(${index})">
+                Delete Room
+            </button>
+
         </div>
+        `;
+    });
+}
 
-        <div class="card">
-            <h2>Hotel Management</h2>
+function addRoom(){
 
-            <div class="buttons">
-                <button onclick="alert('Room Management')">
-                    🏨 Rooms
-                </button>
+    const number = document.getElementById("roomNumber").value.trim();
+    const type = document.getElementById("roomType").value;
+    const status = document.getElementById("roomStatus").value;
 
-                <button onclick="alert('New Booking')">
-                    📝 New Booking
-                </button>
+    if(number === ""){
+        alert("Please enter Room Number");
+        return;
+    }
 
-                <button onclick="alert('Booking List')">
-                    📋 Bookings
-                </button>
+    const exists = rooms.some(room => room.number === number);
 
-                <button onclick="alert('Customer Details')">
-                    👤 Customers
-                </button>
+    if(exists){
+        alert("This Room Number already exists");
+        return;
+    }
 
-                <button onclick="alert('Check In')">
-                    ✅ Check-In
-                </button>
+    rooms.push({
+        number:number,
+        type:type,
+        status:status
+    });
 
-                <button onclick="alert('Check Out')">
-                    🚪 Check-Out
-                </button>
-            </div>
-        </div>
+    document.getElementById("roomNumber").value = "";
 
-    </div>
+    showRooms();
+}
 
-    <div class="footer">
-        Hotel Krishnam | Hotel Management System
-    </div>
+function deleteRoom(index){
+
+    if(confirm("Delete this room?")){
+        rooms.splice(index,1);
+        showRooms();
+    }
+}
+
+showRooms();
+
+</script>
 
 </body>
 </html>
