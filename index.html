@@ -137,6 +137,30 @@ button:hover{
         grid-template-columns:1fr;
     }
 }
+.booking-form{
+    display:grid;
+    gap:12px;
+}
+
+.booking-form input,
+.booking-form select,
+.booking-form textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:7px;
+    font-size:16px;
+}
+
+.booking-form textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.booking-form label{
+    font-weight:bold;
+    color:#555;
+}    
 </style>
 </head>
 
@@ -177,7 +201,54 @@ button:hover{
 </div>
 
 </div>
+<div class="card">
+    <h2>📝 New Booking</h2>
 
+    <div class="booking-form">
+
+        <input type="text" id="customerName"
+               placeholder="Customer Name">
+
+        <input type="tel" id="customerMobile"
+               placeholder="Mobile Number">
+
+        <textarea id="customerAddress"
+                  placeholder="Customer Address"></textarea>
+
+        <select id="bookingRoom">
+            <option value="">Select Room</option>
+        </select>
+
+        <label>Check-In Date</label>
+        <input type="date" id="checkInDate">
+
+        <label>Check-In Time</label>
+        <input type="time" id="checkInTime">
+
+        <label>Check-Out Date</label>
+        <input type="date" id="checkOutDate">
+
+        <label>Check-Out Time</label>
+        <input type="time" id="checkOutTime">
+
+        <input type="number" id="advance"
+               placeholder="Advance Amount">
+
+        <input type="number" id="totalAmount"
+               placeholder="Total Amount">
+
+        <button onclick="saveBooking()">
+            💾 Save Booking
+        </button>
+
+    </div>
+</div>
+    <div class="card">
+    <h2>📋 Booking List</h2>
+    <div id="bookingList">
+        <p>No bookings yet.</p>
+    </div>
+</div>
 <div class="footer">
     Hotel Krishnam | Hotel Management System
 </div>
@@ -267,7 +338,170 @@ function deleteRoom(index){
 }
 
 showRooms();
+function loadBookingRooms(){
 
+    const select = document.getElementById("bookingRoom");
+
+    select.innerHTML = '<option value="">Select Room</option>';
+
+    rooms.forEach(room => {
+
+        if(room.status === "Available"){
+
+            select.innerHTML += `
+                <option value="${room.number}">
+                    Room ${room.number} - ${room.type}
+                </option>
+            `;
+        }
+    });
+}
+
+let bookings = [];
+
+function saveBooking(){
+
+    const name = document.getElementById("customerName").value.trim();
+    const mobile = document.getElementById("customerMobile").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+    const roomNumber = document.getElementById("bookingRoom").value;
+    const checkInDate = document.getElementById("checkInDate").value;
+    const checkInTime = document.getElementById("checkInTime").value;
+    const checkOutDate = document.getElementById("checkOutDate").value;
+    const checkOutTime = document.getElementById("checkOutTime").value;
+    const advance = document.getElementById("advance").value || 0;
+    const total = document.getElementById("totalAmount").value || 0;
+
+    if(name === "" || mobile === "" || roomNumber === ""){
+        alert("Customer Name, Mobile और Room Number भरना जरूरी है");
+        return;
+    }
+
+    const room = rooms.find(r => r.number === roomNumber);
+
+    if(room){
+        room.status = "Booked";
+    }
+
+    const booking = {
+        name,
+        mobile,
+        address,
+        roomNumber,
+        checkInDate,
+        checkInTime,
+        checkOutDate,
+        checkOutTime,
+        advance,
+        total
+    };
+
+    bookings.push(booking);
+
+    alert("Booking Successfully Saved!");
+
+    showBookings();
+    showRooms();
+    loadBookingRooms();
+
+    document.getElementById("customerName").value = "";
+    document.getElementById("customerMobile").value = "";
+    document.getElementById("customerAddress").value = "";
+    document.getElementById("bookingRoom").value = "";
+    document.getElementById("checkInDate").value = "";
+    document.getElementById("checkInTime").value = "";
+    document.getElementById("checkOutDate").value = "";
+    document.getElementById("checkOutTime").value = "";
+    document.getElementById("advance").value = "";
+    document.getElementById("totalAmount").value = "";
+}
+
+function showBookings(){
+
+    const list = document.getElementById("bookingList");
+
+    if(bookings.length === 0){
+        list.innerHTML = "<p>No bookings yet.</p>";
+        return;
+    }
+
+    list.innerHTML = "";
+
+    bookings.forEach((booking,index) => {
+
+        list.innerHTML += `
+        <div class="room" style="margin-bottom:15px">
+
+            <h3>Room ${booking.roomNumber}</h3>
+
+            <p><b>Customer:</b> ${booking.name}</p>
+            <p><b>Mobile:</b> ${booking.mobile}</p>
+            <p><b>Address:</b> ${booking.address}</p>
+
+            <p>
+                <b>Check-In:</b>
+                ${booking.checkInDate} ${booking.checkInTime}
+            </p>
+
+            <p>
+                <b>Check-Out:</b>
+                ${booking.checkOutDate} ${booking.checkOutTime}
+            </p>
+
+            <p><b>Advance:</b> ₹${booking.advance}</p>
+            <p><b>Total:</b> ₹${booking.total}</p>
+
+            <button onclick="viewBooking(${index})">
+                👁️ View
+            </button>
+
+            <button class="delete" onclick="deleteBooking(${index})">
+                🗑️ Delete
+            </button>
+
+        </div>
+        `;
+    });
+}
+
+function viewBooking(index){
+
+    const booking = bookings[index];
+
+    alert(
+        "Customer: " + booking.name +
+        "\nMobile: " + booking.mobile +
+        "\nRoom: " + booking.roomNumber +
+        "\nAddress: " + booking.address +
+        "\nCheck-In: " + booking.checkInDate + " " + booking.checkInTime +
+        "\nCheck-Out: " + booking.checkOutDate + " " + booking.checkOutTime +
+        "\nAdvance: ₹" + booking.advance +
+        "\nTotal: ₹" + booking.total
+    );
+}
+
+function deleteBooking(index){
+
+    if(confirm("क्या आप यह booking delete करना चाहते हैं?")){
+
+        const roomNumber = bookings[index].roomNumber;
+
+        const room = rooms.find(r => r.number === roomNumber);
+
+        if(room){
+            room.status = "Available";
+        }
+
+        bookings.splice(index,1);
+
+        showBookings();
+        showRooms();
+        loadBookingRooms();
+    }
+}    
+
+loadBookingRooms();
+    showBookings();
 </script>
 
 </body>
