@@ -1,142 +1,63 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hotel Krishnam Management</title>
+<title>Hotel Krishnam</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-}
-
 body{
-    background:#f2f4f7;
-    color:#333;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
 }
 
 .header{
-    background:#8b0000;
+    background:#c62828;
     color:white;
     text-align:center;
     padding:20px;
 }
 
-.header h1{
-    font-size:28px;
-}
-
-.header p{
-    margin-top:5px;
-}
-
 .container{
-    max-width:1000px;
+    max-width:900px;
     margin:auto;
-    padding:20px;
+    padding:15px;
 }
 
 .card{
     background:white;
     padding:20px;
-    border-radius:12px;
     margin-bottom:20px;
+    border-radius:10px;
     box-shadow:0 2px 8px #ccc;
 }
 
 h2{
-    color:#8b0000;
-    margin-bottom:15px;
-}
-
-.room-form{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr auto;
-    gap:10px;
-}
-
-input,select{
-    padding:12px;
-    border:1px solid #ccc;
-    border-radius:7px;
-    font-size:16px;
-}
-
-button{
-    border:none;
-    border-radius:7px;
-    padding:12px 18px;
-    background:#8b0000;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#b22222;
-}
-
-.room-list{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
+    color:#c62828;
 }
 
 .room{
     border:1px solid #ddd;
-    border-radius:10px;
     padding:15px;
-    background:#fafafa;
+    margin-bottom:10px;
+    border-radius:8px;
 }
 
-.room h3{
-    color:#8b0000;
-    margin-bottom:8px;
-}
-
-.status{
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:20px;
-    margin-top:8px;
-    font-size:14px;
-}
-
-.available{
-    background:#d4edda;
-    color:#155724;
-}
-
-.booked{
-    background:#f8d7da;
-    color:#721c24;
-}
-
-.cleaning{
-    background:#fff3cd;
-    color:#856404;
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:6px;
+    background:#1976d2;
+    color:white;
+    cursor:pointer;
 }
 
 .delete{
-    margin-top:10px;
-    background:#555;
-    font-size:14px;
+    background:#d32f2f;
 }
 
-.footer{
-    text-align:center;
-    padding:20px;
-    color:#777;
-}
-
-@media(max-width:700px){
-    .room-form{
-        grid-template-columns:1fr;
-    }
-}
 .booking-form{
     display:grid;
     gap:12px;
@@ -146,6 +67,7 @@ button:hover{
 .booking-form select,
 .booking-form textarea{
     width:100%;
+    box-sizing:border-box;
     padding:12px;
     border:1px solid #ccc;
     border-radius:7px;
@@ -160,60 +82,45 @@ button:hover{
 .booking-form label{
     font-weight:bold;
     color:#555;
-}    
+}
+
+.footer{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <h1>Hotel Krishnam</h1>
+    <h1>🏨 Hotel Krishnam</h1>
     <p>Hotel Management System</p>
 </div>
 
 <div class="container">
 
+<!-- ROOMS -->
 <div class="card">
-    <h2>🏨 Room Management</h2>
-
-    <div class="room-form">
-        <input type="text" id="roomNumber" placeholder="Room No.">
-
-        <select id="roomType">
-            <option value="AC">AC Room</option>
-            <option value="Non-AC">Non-AC Room</option>
-        </select>
-
-        <select id="roomStatus">
-            <option value="Available">Available</option>
-            <option value="Booked">Booked</option>
-            <option value="Cleaning">Cleaning</option>
-        </select>
-
-        <button onclick="addRoom()">Add Room</button>
-    </div>
+    <h2>🏨 Rooms</h2>
+    <div id="roomsList"></div>
 </div>
 
-<div class="card">
-    <h2>Rooms</h2>
-
-    <div id="roomList" class="room-list"></div>
-</div>
-
-</div>
+<!-- NEW BOOKING -->
 <div class="card">
     <h2>📝 New Booking</h2>
 
     <div class="booking-form">
 
         <input type="text" id="customerName"
-               placeholder="Customer Name">
+        placeholder="Customer Name">
 
         <input type="tel" id="customerMobile"
-               placeholder="Mobile Number">
+        placeholder="Mobile Number">
 
         <textarea id="customerAddress"
-                  placeholder="Customer Address"></textarea>
+        placeholder="Customer Address"></textarea>
 
         <select id="bookingRoom">
             <option value="">Select Room</option>
@@ -232,10 +139,10 @@ button:hover{
         <input type="time" id="checkOutTime">
 
         <input type="number" id="advance"
-               placeholder="Advance Amount">
+        placeholder="Advance Amount">
 
         <input type="number" id="totalAmount"
-               placeholder="Total Amount">
+        placeholder="Total Amount">
 
         <button onclick="saveBooking()">
             💾 Save Booking
@@ -243,336 +150,371 @@ button:hover{
 
     </div>
 </div>
-    <div class="card">
+
+<!-- BOOKING LIST -->
+<div class="card">
     <h2>📋 Booking List</h2>
     <div id="bookingList">
         <p>No bookings yet.</p>
     </div>
 </div>
+
+</div>
+
 <div class="footer">
-    Hotel Krishnam | Hotel Management System
+    Hotel Krishnam © 2026
 </div>
 
 <script>
 
 let rooms = [
-    {number:"101", type:"Non-AC", status:"Available"},
-    {number:"102", type:"Non-AC", status:"Available"},
-    {number:"201", type:"AC", status:"Available"},
-    {number:"202", type:"AC", status:"Available"},
-    {number:"203", type:"AC", status:"Available"},
-    {number:"204", type:"AC", status:"Available"},
-    {number:"301", type:"AC", status:"Available"},
-    {number:"302", type:"AC", status:"Available"},
-    {number:"303", type:"AC", status:"Available"},
-    {number:"304", type:"AC", status:"Available"}
+    {number:"101", type:"AC", status:"Available"},
+    {number:"102", type:"AC", status:"Available"},
+    {number:"103", type:"AC", status:"Available"},
+    {number:"104", type:"AC", status:"Available"},
+    {number:"105", type:"AC", status:"Available"},
+    {number:"106", type:"Non-AC", status:"Available"},
+    {number:"107", type:"Non-AC", status:"Available"},
+    {number:"108", type:"Non-AC", status:"Available"},
+    {number:"109", type:"Non-AC", status:"Available"},
+    {number:"110", type:"Non-AC", status:"Available"}
 ];
+
+let bookings = [];
+
 
 function showRooms(){
 
-    const list = document.getElementById("roomList");
+    const list = document.getElementById("roomsList");
 
     list.innerHTML = "";
 
-    rooms.forEach((room,index)=>{
-
-        let statusClass = room.status.toLowerCase();
+    rooms.forEach(room => {
 
         list.innerHTML += `
         <div class="room">
 
             <h3>Room ${room.number}</h3>
 
-            <p><b>Type:</b> ${room.type}</p>
+            <p>
+            <b>Type:</b> ${room.type}
+            </p>
 
-            <span class="status ${statusClass}">
-                ${room.status}
-            </span>
-
-            <br>
-
-            <button class="delete" onclick="deleteRoom(${index})">
-                Delete Room
-            </button>
+            <p>
+            <b>Status:</b> ${room.status}
+            </p>
 
         </div>
         `;
-    });
-}
 
-function addRoom(){
-
-    const number = document.getElementById("roomNumber").value.trim();
-    const type = document.getElementById("roomType").value;
-    const status = document.getElementById("roomStatus").value;
-
-    if(number === ""){
-        alert("Please enter Room Number");
-        return;
-    }
-
-    const exists = rooms.some(room => room.number === number);
-
-    if(exists){
-        alert("This Room Number already exists");
-        return;
-    }
-
-    rooms.push({
-        number:number,
-        type:type,
-        status:status
     });
 
-    document.getElementById("roomNumber").value = "";
-
-    showRooms();
 }
 
-function deleteRoom(index){
 
-    if(confirm("Delete this room?")){
-        rooms.splice(index,1);
-        showRooms();
-    }
-}
-
-showRooms();
 function loadBookingRooms(){
 
-    const select = document.getElementById("bookingRoom");
+    const select =
+    document.getElementById("bookingRoom");
 
-    select.innerHTML = '<option value="">Select Room</option>';
+    select.innerHTML =
+    '<option value="">Select Room</option>';
 
     rooms.forEach(room => {
 
         if(room.status === "Available"){
 
             select.innerHTML += `
-                <option value="${room.number}">
-                    Room ${room.number} - ${room.type}
-                </option>
+            <option value="${room.number}">
+            Room ${room.number} - ${room.type}
+            </option>
             `;
+
         }
+
     });
+
 }
 
-let bookings = [];
 
 function saveBooking(){
 
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-    async function saveBooking(){
+    const name =
+    document.getElementById("customerName").value.trim();
 
-    const name = document.getElementById("customerName").value.trim();
-    const mobile = document.getElementById("customerMobile").value.trim();
-    const address = document.getElementById("customerAddress").value.trim();
-    const roomNumber = document.getElementById("bookingRoom").value;
-    const checkInDate = document.getElementById("checkInDate").value;
-    const checkInTime = document.getElementById("checkInTime").value;
-    const checkOutDate = document.getElementById("checkOutDate").value;
-    const checkOutTime = document.getElementById("checkOutTime").value;
-    const advance = document.getElementById("advance").value || 0;
-    const total = document.getElementById("totalAmount").value || 0;
+    const mobile =
+    document.getElementById("customerMobile").value.trim();
 
-    if(name === "" || mobile === "" || roomNumber === ""){
-        alert("Customer Name, Mobile और Room Number भरना जरूरी है");
+    const address =
+    document.getElementById("customerAddress").value.trim();
+
+    const roomNumber =
+    document.getElementById("bookingRoom").value;
+
+    const checkInDate =
+    document.getElementById("checkInDate").value;
+
+    const checkInTime =
+    document.getElementById("checkInTime").value;
+
+    const checkOutDate =
+    document.getElementById("checkOutDate").value;
+
+    const checkOutTime =
+    document.getElementById("checkOutTime").value;
+
+    const advance =
+    document.getElementById("advance").value || 0;
+
+    const total =
+    document.getElementById("totalAmount").value || 0;
+
+
+    if(name === "" ||
+       mobile === "" ||
+       roomNumber === ""){
+
+        alert(
+        "Customer Name, Mobile और Room Number भरना जरूरी है"
+        );
+
         return;
     }
 
-    try {
 
-        await addDoc(collection(firebaseDB, "bookings"), {
-            name: name,
-            mobile: mobile,
-            address: address,
-            roomNumber: roomNumber,
-            checkInDate: checkInDate,
-            checkInTime: checkInTime,
-            checkOutDate: checkOutDate,
-            checkOutTime: checkOutTime,
-            advance: advance,
-            total: total,
-            createdAt: new Date().toISOString()
-        });
+    const room =
+    rooms.find(r => r.number === roomNumber);
 
-        const room = rooms.find(r => r.number === roomNumber);
 
-        if(room){
-            room.status = "Booked";
-        }
+    if(room){
 
-        alert("Booking Firebase में Successfully Saved!");
-
-        await loadBookingsFromFirebase();
-
-        showRooms();
-        loadBookingRooms();
-
-        document.getElementById("customerName").value = "";
-        document.getElementById("customerMobile").value = "";
-        document.getElementById("customerAddress").value = "";
-        document.getElementById("bookingRoom").value = "";
-        document.getElementById("checkInDate").value = "";
-        document.getElementById("checkInTime").value = "";
-        document.getElementById("checkOutDate").value = "";
-        document.getElementById("checkOutTime").value = "";
-        document.getElementById("advance").value = "";
-        document.getElementById("totalAmount").value = "";
-
-    } catch(error) {
-
-        console.error(error);
-        alert("Booking Save नहीं हुई। Firebase connection check करें।");
+        room.status = "Booked";
 
     }
+
+
+    const booking = {
+
+        name:name,
+        mobile:mobile,
+        address:address,
+        roomNumber:roomNumber,
+        checkInDate:checkInDate,
+        checkInTime:checkInTime,
+        checkOutDate:checkOutDate,
+        checkOutTime:checkOutTime,
+        advance:advance,
+        total:total
+
+    };
+
+
+    bookings.push(booking);
+
+
+    alert("Booking Successfully Saved!");
+
+
+    showBookings();
+
+    showRooms();
+
+    loadBookingRooms();
+
+
+    document.getElementById("customerName").value = "";
+
+    document.getElementById("customerMobile").value = "";
+
+    document.getElementById("customerAddress").value = "";
+
+    document.getElementById("bookingRoom").value = "";
+
+    document.getElementById("checkInDate").value = "";
+
+    document.getElementById("checkInTime").value = "";
+
+    document.getElementById("checkOutDate").value = "";
+
+    document.getElementById("checkOutTime").value = "";
+
+    document.getElementById("advance").value = "";
+
+    document.getElementById("totalAmount").value = "";
+
 }
-    async function loadBookingsFromFirebase(){
 
-    try {
-
-        const snapshot = await getDocs(collection(firebaseDB, "bookings"));
-
-        bookings = [];
-
-        snapshot.forEach((item) => {
-
-            bookings.push({
-                id: item.id,
-                ...item.data()
-            });
-
-        });
-
-        showBookings();
-
-    } catch(error) {
-
-        console.error(error);
-        alert("Firebase से Booking load नहीं हो रही है।");
-
-    }
-}
-    
 
 function showBookings(){
 
-    const list = document.getElementById("bookingList");
+    const list =
+    document.getElementById("bookingList");
+
 
     if(bookings.length === 0){
-        list.innerHTML = "<p>No bookings yet.</p>";
+
+        list.innerHTML =
+        "<p>No bookings yet.</p>";
+
         return;
+
     }
 
+
     list.innerHTML = "";
+
 
     bookings.forEach((booking,index) => {
 
         list.innerHTML += `
-        <div class="room" style="margin-bottom:15px">
 
-            <h3>Room ${booking.roomNumber}</h3>
+        <div class="room">
 
-            <p><b>Customer:</b> ${booking.name}</p>
-            <p><b>Mobile:</b> ${booking.mobile}</p>
-            <p><b>Address:</b> ${booking.address}</p>
+            <h3>
+            Room ${booking.roomNumber}
+            </h3>
 
             <p>
-                <b>Check-In:</b>
-                ${booking.checkInDate} ${booking.checkInTime}
+            <b>Customer:</b>
+            ${booking.name}
             </p>
 
             <p>
-                <b>Check-Out:</b>
-                ${booking.checkOutDate} ${booking.checkOutTime}
+            <b>Mobile:</b>
+            ${booking.mobile}
             </p>
 
-            <p><b>Advance:</b> ₹${booking.advance}</p>
-            <p><b>Total:</b> ₹${booking.total}</p>
+            <p>
+            <b>Address:</b>
+            ${booking.address}
+            </p>
+
+            <p>
+            <b>Check-In:</b>
+            ${booking.checkInDate}
+            ${booking.checkInTime}
+            </p>
+
+            <p>
+            <b>Check-Out:</b>
+            ${booking.checkOutDate}
+            ${booking.checkOutTime}
+            </p>
+
+            <p>
+            <b>Advance:</b>
+            ₹${booking.advance}
+            </p>
+
+            <p>
+            <b>Total:</b>
+            ₹${booking.total}
+            </p>
 
             <button onclick="viewBooking(${index})">
-                👁️ View
+            👁️ View
             </button>
 
-            <button class="delete" onclick="deleteBooking(${index})">
-                🗑️ Delete
+            <button
+            class="delete"
+            onclick="deleteBooking(${index})">
+            🗑️ Delete
             </button>
 
         </div>
+
         `;
+
     });
+
 }
+
 
 function viewBooking(index){
 
-    const booking = bookings[index];
+    const booking =
+    bookings[index];
+
 
     alert(
+
         "Customer: " + booking.name +
+
         "\nMobile: " + booking.mobile +
+
         "\nRoom: " + booking.roomNumber +
+
         "\nAddress: " + booking.address +
-        "\nCheck-In: " + booking.checkInDate + " " + booking.checkInTime +
-        "\nCheck-Out: " + booking.checkOutDate + " " + booking.checkOutTime +
-        "\nAdvance: ₹" + booking.advance +
-        "\nTotal: ₹" + booking.total
+
+        "\nCheck-In: " +
+        booking.checkInDate +
+        " " +
+        booking.checkInTime +
+
+        "\nCheck-Out: " +
+        booking.checkOutDate +
+        " " +
+        booking.checkOutTime +
+
+        "\nAdvance: ₹" +
+        booking.advance +
+
+        "\nTotal: ₹" +
+        booking.total
+
     );
+
 }
+
 
 function deleteBooking(index){
 
-    if(confirm("क्या आप यह booking delete करना चाहते हैं?")){
+    if(
+        confirm(
+        "क्या आप यह booking delete करना चाहते हैं?"
+        )
+    ){
 
-        const roomNumber = bookings[index].roomNumber;
+        const roomNumber =
+        bookings[index].roomNumber;
 
-        const room = rooms.find(r => r.number === roomNumber);
+
+        const room =
+        rooms.find(
+        r => r.number === roomNumber
+        );
+
 
         if(room){
+
             room.status = "Available";
+
         }
+
 
         bookings.splice(index,1);
 
+
         showBookings();
+
         showRooms();
+
         loadBookingRooms();
+
     }
-}    
+
+}
+
+
+/* START APP */
+
+showRooms();
 
 loadBookingRooms();
-    showBookings();
+
+showBookings();
+
 </script>
-<script type="module">
-  import { initializeApp } 
-    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
-  import { getFirestore } 
-    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "YAHAN_FIREBASE_API_KEY",
-    authDomain: "hotel-krishnam.firebaseapp.com",
-    projectId: "hotel-krishnam",
-    storageBucket: "hotel-krishnam.firebasestorage.app",
-    messagingSenderId: "706438081012",
-    appId: "1:706438081012:web:dcd38d685471607271a1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  window.firebaseDB = db;
-
-  console.log("Firebase connected successfully!");
-</script>
 </body>
 </html>
-loadBookingsFromFirebase();
