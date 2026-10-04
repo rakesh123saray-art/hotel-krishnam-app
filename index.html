@@ -361,6 +361,17 @@ let bookings = [];
 
 function saveBooking(){
 
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    async function saveBooking(){
+
     const name = document.getElementById("customerName").value.trim();
     const mobile = document.getElementById("customerMobile").value.trim();
     const address = document.getElementById("customerAddress").value.trim();
@@ -377,44 +388,80 @@ function saveBooking(){
         return;
     }
 
-    const room = rooms.find(r => r.number === roomNumber);
+    try {
 
-    if(room){
-        room.status = "Booked";
+        await addDoc(collection(firebaseDB, "bookings"), {
+            name: name,
+            mobile: mobile,
+            address: address,
+            roomNumber: roomNumber,
+            checkInDate: checkInDate,
+            checkInTime: checkInTime,
+            checkOutDate: checkOutDate,
+            checkOutTime: checkOutTime,
+            advance: advance,
+            total: total,
+            createdAt: new Date().toISOString()
+        });
+
+        const room = rooms.find(r => r.number === roomNumber);
+
+        if(room){
+            room.status = "Booked";
+        }
+
+        alert("Booking Firebase में Successfully Saved!");
+
+        await loadBookingsFromFirebase();
+
+        showRooms();
+        loadBookingRooms();
+
+        document.getElementById("customerName").value = "";
+        document.getElementById("customerMobile").value = "";
+        document.getElementById("customerAddress").value = "";
+        document.getElementById("bookingRoom").value = "";
+        document.getElementById("checkInDate").value = "";
+        document.getElementById("checkInTime").value = "";
+        document.getElementById("checkOutDate").value = "";
+        document.getElementById("checkOutTime").value = "";
+        document.getElementById("advance").value = "";
+        document.getElementById("totalAmount").value = "";
+
+    } catch(error) {
+
+        console.error(error);
+        alert("Booking Save नहीं हुई। Firebase connection check करें।");
+
     }
-
-    const booking = {
-        name,
-        mobile,
-        address,
-        roomNumber,
-        checkInDate,
-        checkInTime,
-        checkOutDate,
-        checkOutTime,
-        advance,
-        total
-    };
-
-    bookings.push(booking);
-
-    alert("Booking Successfully Saved!");
-
-    showBookings();
-    showRooms();
-    loadBookingRooms();
-
-    document.getElementById("customerName").value = "";
-    document.getElementById("customerMobile").value = "";
-    document.getElementById("customerAddress").value = "";
-    document.getElementById("bookingRoom").value = "";
-    document.getElementById("checkInDate").value = "";
-    document.getElementById("checkInTime").value = "";
-    document.getElementById("checkOutDate").value = "";
-    document.getElementById("checkOutTime").value = "";
-    document.getElementById("advance").value = "";
-    document.getElementById("totalAmount").value = "";
 }
+    async function loadBookingsFromFirebase(){
+
+    try {
+
+        const snapshot = await getDocs(collection(firebaseDB, "bookings"));
+
+        bookings = [];
+
+        snapshot.forEach((item) => {
+
+            bookings.push({
+                id: item.id,
+                ...item.data()
+            });
+
+        });
+
+        showBookings();
+
+    } catch(error) {
+
+        console.error(error);
+        alert("Firebase से Booking load नहीं हो रही है।");
+
+    }
+}
+    
 
 function showBookings(){
 
@@ -528,3 +575,4 @@ loadBookingRooms();
 </script>
 </body>
 </html>
+loadBookingsFromFirebase();
