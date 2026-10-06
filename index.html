@@ -134,6 +134,16 @@ button:hover{
     padding:0;
 }
 
+.occupied{
+    border-left:6px solid #7b1fa2;
+}
+
+.status.occupied{
+    color:#7b1fa2;
+    border:0;
+    padding:0;
+}
+
 .footer{
     text-align:center;
     padding:25px;
@@ -436,6 +446,16 @@ let bookings =
     ) || [];
 
 
+// पुराने bookings में status न हो तो Booked रखें
+bookings.forEach(booking => {
+    if(!booking.status){
+        booking.status = "Booked";
+    }
+});
+
+saveBookings();
+
+
 /* =========================
    SAVE ROOMS
 ========================= */
@@ -479,6 +499,7 @@ function showRooms(){
     let available = 0;
 
     let booked = 0;
+    let occupied = 0;
 
 
     rooms.forEach(room => {
@@ -494,6 +515,12 @@ function showRooms(){
         if(room.status === "Booked"){
 
             booked++;
+
+        }
+
+        if(room.status === "Occupied"){
+
+            occupied++;
 
         }
 
@@ -543,7 +570,7 @@ function showRooms(){
 
     document.getElementById(
         "bookedRooms"
-    ).innerText = booked;
+    ).innerText = booked + occupied;
 
 }
 
@@ -722,7 +749,8 @@ function saveBooking(){
 
         advance:advance,
 
-        total:total
+        total:total,
+        status:"Booked"
 
     };
 
@@ -895,6 +923,19 @@ function showBookings(){
                     ₹${booking.total}
                 </p>
 
+                <p>
+                    <b>Status:</b>
+                    <span class="status ${
+                        booking.status === "Checked-In"
+                        ? "occupied"
+                        : booking.status === "Checked-Out"
+                        ? "available"
+                        : "booked"
+                    }">
+                        ${booking.status || "Booked"}
+                    </span>
+                </p>
+
 
                 <button
                     onclick="viewBooking(${index})"
@@ -903,6 +944,22 @@ function showBookings(){
                     👁️ View
 
                 </button>
+
+                ${
+                    booking.status === "Booked"
+                    ? `<button onclick="checkInBooking(${index})">
+                        🟢 Check-In
+                    </button>`
+                    : ""
+                }
+
+                ${
+                    booking.status === "Checked-In"
+                    ? `<button onclick="checkOutBooking(${index})">
+                        🔴 Check-Out
+                    </button>`
+                    : ""
+                }
 
 
                 <button
@@ -965,6 +1022,96 @@ function viewBooking(index){
 
     );
 
+}
+
+
+/* =========================
+   CHECK-IN
+========================= */
+
+function checkInBooking(index){
+
+    const booking = bookings[index];
+
+    if(!booking){
+        alert("Booking नहीं मिली");
+        return;
+    }
+
+    if(booking.status !== "Booked"){
+        alert("यह booking Check-In के लिए उपलब्ध नहीं है");
+        return;
+    }
+
+    const room = rooms.find(
+        r => r.number === booking.roomNumber
+    );
+
+    if(room){
+        room.status = "Occupied";
+    }
+
+    booking.status = "Checked-In";
+
+    saveBookings();
+    saveRooms();
+
+    showBookings();
+    showRooms();
+    loadBookingRooms();
+
+    alert(
+        "✅ Check-In Successfully!
+
+Room " +
+        booking.roomNumber +
+        " is now Occupied."
+    );
+}
+
+
+/* =========================
+   CHECK-OUT
+========================= */
+
+function checkOutBooking(index){
+
+    const booking = bookings[index];
+
+    if(!booking){
+        alert("Booking नहीं मिली");
+        return;
+    }
+
+    if(booking.status !== "Checked-In"){
+        alert("पहले Check-In करना जरूरी है");
+        return;
+    }
+
+    const room = rooms.find(
+        r => r.number === booking.roomNumber
+    );
+
+    if(room){
+        room.status = "Available";
+    }
+
+    booking.status = "Checked-Out";
+
+    saveBookings();
+    saveRooms();
+
+    showBookings();
+    showRooms();
+    loadBookingRooms();
+
+    alert(
+        "✅ Check-Out Successfully!
+
+Room " +
+        booking.roomNumber +
+        " is now Available."
+    );
 }
 
 
