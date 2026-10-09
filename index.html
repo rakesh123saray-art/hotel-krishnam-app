@@ -1184,4 +1184,173 @@ renderBookings();
 </script>
 
 </body>
+    
+<!-- Hotel Krishnam Payment Panel -->
+<section id="payment-panel" style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #ddd;border-radius:12px;font-family:Arial,sans-serif;background:#fff;">
+  <h2 style="text-align:center;color:#174a35;">Hotel Krishnam</h2>
+  <h3>Payment & Due Balance</h3>
+
+  <label>Room Number</label>
+  <select id="payRoom" style="width:100%;padding:12px;margin:8px 0;">
+    <option value="">Select Room</option>
+  </select>
+
+  <label>Customer Name</label>
+  <input id="payName" placeholder="Enter customer name"
+    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
+
+  <label>Total Bill (₹)</label>
+  <input id="totalBill" type="number" min="0" step="0.01" value="0"
+    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
+
+  <label>Payment Received Now (₹)</label>
+  <input id="paymentNow" type="number" min="0" step="0.01" value="0"
+    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
+
+  <button type="button" onclick="calculatePayment()"
+    style="width:100%;padding:12px;background:#176b45;color:white;border:0;border-radius:6px;margin:10px 0;">
+    Calculate Balance
+  </button>
+
+  <div style="padding:12px;background:#f2f7f3;border-radius:8px;">
+    <p>Total Bill: ₹<strong id="showTotal">0.00</strong></p>
+    <p>Total Paid: ₹<strong id="showPaid">0.00</strong></p>
+    <p>Due Balance: ₹<strong id="showDue">0.00</strong></p>
+    <p>Status: <strong id="showStatus">Pending</strong></p>
+  </div>
+
+  <button type="button" onclick="savePayment()"
+    style="width:100%;padding:12px;background:#174a35;color:white;border:0;border-radius:6px;margin-top:12px;">
+    Save Payment
+  </button>
+
+  <h3>Payment Records</h3>
+  <div id="paymentRecords"></div>
+</section>
+
+<script>
+(function () {
+  const roomSelect = document.getElementById("payRoom");
+  for (let room = 101; room <= 110; room++) {
+    const option = document.createElement("option");
+    option.value = room;
+    option.textContent = "Room " + room;
+    roomSelect.appendChild(option);
+  }
+})();
+
+function readPayments() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("hotelKrishnamPayments") || "[]"
+    );
+  } catch (error) {
+    return [];
+  }
+}
+
+function money(value) {
+  return Number(value).toFixed(2);
+}
+
+function calculatePayment() {
+  const total = Number(document.getElementById("totalBill").value);
+  const now = Number(document.getElementById("paymentNow").value);
+
+  if (!Number.isFinite(total) || !Number.isFinite(now) ||
+      total < 0 || now < 0 || now > total) {
+    alert("Please enter valid amounts. Payment cannot exceed total bill.");
+    return false;
+  }
+
+  const room = document.getElementById("payRoom").value;
+  const name = document.getElementById("payName").value.trim();
+
+  if (!room || !name) {
+    alert("Please select room number and enter customer name.");
+    return false;
+  }
+
+  const existing = readPayments().find(
+    p => p.room === room && p.name === name
+  );
+
+  const alreadyPaid = existing ? existing.paid : 0;
+  const newPaid = alreadyPaid + now;
+
+  if (newPaid > total) {
+    alert("Total payments cannot exceed the total bill.");
+    return false;
+  }
+
+  const due = total - newPaid;
+
+  document.getElementById("showTotal").textContent = money(total);
+  document.getElementById("showPaid").textContent = money(newPaid);
+  document.getElementById("showDue").textContent = money(due);
+  document.getElementById("showStatus").textContent =
+    due === 0 ? "Paid" : "Pending";
+
+  return { room, name, total, paid: newPaid, due };
+}
+
+function savePayment() {
+  const result = calculatePayment();
+  if (!result) return;
+
+  const records = readPayments();
+  const index = records.findIndex(
+    p => p.room === result.room && p.name === result.name
+  );
+
+  const record = {
+    ...result,
+    updatedAt: new Date().toISOString()
+  };
+
+  if (index >= 0) {
+    records[index] = record;
+  } else {
+    records.push(record);
+  }
+
+  try {
+    localStorage.setItem(
+      "hotelKrishnamPayments",
+      JSON.stringify(records)
+    );
+    renderPaymentRecords();
+    document.getElementById("paymentNow").value = 0;
+    alert("Payment saved successfully!");
+  } catch (error) {
+    alert("Payment save nahi hua. Browser storage check karein.");
+  }
+}
+
+function renderPaymentRecords() {
+  const container = document.getElementById("paymentRecords");
+  container.replaceChildren();
+
+  readPayments().forEach(record => {
+    const item = document.createElement("div");
+    item.style.cssText =
+      "padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const title = document.createElement("strong");
+    title.textContent = "Room " + record.room + " — " + record.name;
+
+    const details = document.createElement("p");
+    details.textContent =
+      "Bill: ₹" + money(record.total) +
+      " | Paid: ₹" + money(record.paid) +
+      " | Due: ₹" + money(record.due) +
+      " | " + (record.due === 0 ? "Paid" : "Pending");
+
+    item.append(title, details);
+    container.appendChild(item);
+  });
+}
+
+renderPaymentRecords();
+</script>
 </html>
