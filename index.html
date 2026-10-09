@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Hotel Krishnam - Hotel Management</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
@@ -25,14 +22,8 @@ header{
     padding:20px 10px;
 }
 
-header h1{
-    margin:0;
-    font-size:28px;
-}
-
-header p{
-    margin:5px 0 0;
-}
+header h1{margin:0;font-size:28px}
+header p{margin:5px 0 0}
 
 .container{
     width:95%;
@@ -55,7 +46,7 @@ header p{
 
 .dashboard{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:10px;
 }
 
@@ -83,21 +74,13 @@ header p{
     color:white;
     text-align:center;
     border-radius:8px;
-    cursor:pointer;
     font-weight:bold;
 }
 
-.available{
-    background:#10a651;
-}
-
-.booked{
-    background:#e0a000;
-}
-
-.occupied{
-    background:#d90000;
-}
+.available{background:#10a651}
+.booked{background:#e0a000}
+.occupied{background:#d90000}
+.cleaning{background:#7b4bb7}
 
 label{
     display:block;
@@ -130,38 +113,16 @@ button{
     margin:4px;
 }
 
-.save-btn{
-    background:#168a43;
-    margin-top:15px;
-}
-
-.view-btn{
-    background:#168de2;
-}
-
-.checkin-btn{
-    background:#d98d00;
-}
-
-.checkout-btn{
-    background:#dc3045;
-}
-
-.bill-btn{
-    background:#673ab7;
-}
-
-.delete-btn{
-    background:#d0008b;
-}
-
-.close-btn{
-    background:#555;
-}
-
-.print-btn{
-    background:#168a43;
-}
+.save-btn{background:#168a43}
+.view-btn{background:#168de2}
+.checkin-btn{background:#d98d00}
+.checkout-btn{background:#dc3045}
+.bill-btn{background:#673ab7}
+.delete-btn{background:#d0008b}
+.clean-btn{background:#7b4bb7}
+.available-btn{background:#168a43}
+.close-btn{background:#555}
+.print-btn{background:#168a43}
 
 .booking{
     border-left:6px solid #168de2;
@@ -235,7 +196,7 @@ button{
 @media(max-width:700px){
 
     .dashboard{
-        grid-template-columns:1fr;
+        grid-template-columns:repeat(2,1fr);
     }
 
     .room-grid{
@@ -245,17 +206,11 @@ button{
     .form-grid{
         grid-template-columns:1fr;
     }
-
-    button{
-        width:auto;
-    }
 }
 
 @media print{
 
-    body *{
-        visibility:hidden;
-    }
+    body *{visibility:hidden}
 
     #printArea,
     #printArea *{
@@ -271,7 +226,7 @@ button{
     }
 
     .no-print{
-        display:none !important;
+        display:none!important;
     }
 }
 </style>
@@ -280,43 +235,48 @@ button{
 <body>
 
 <header>
-    <h1>Hotel Krishnam</h1>
-    <p>Hotel Management System</p>
+<h1>Hotel Krishnam</h1>
+<p>Hotel Management System</p>
 </header>
 
 <div class="container">
 
 <!-- DASHBOARD -->
 <div class="section">
-    <h2>📊 Room Dashboard</h2>
+<h2>📊 Room Dashboard</h2>
 
-    <div class="dashboard">
+<div class="dashboard">
 
-        <div class="stat">
-            <strong id="totalRooms">10</strong>
-            Total Rooms
-        </div>
+<div class="stat">
+<strong id="totalRooms">10</strong>
+Total Rooms
+</div>
 
-        <div class="stat">
-            <strong id="availableRooms">10</strong>
-            Available
-        </div>
+<div class="stat">
+<strong id="availableRooms">10</strong>
+Available
+</div>
 
-        <div class="stat">
-            <strong id="busyRooms">0</strong>
-            Booked / Occupied
-        </div>
+<div class="stat">
+<strong id="bookedRooms">0</strong>
+Booked
+</div>
 
-    </div>
+<div class="stat">
+<strong id="cleaningRooms">0</strong>
+Cleaning
+</div>
+
+</div>
 </div>
 
 
 <!-- ROOM MANAGEMENT -->
 <div class="section">
 
-    <h2>🛏 Room Management</h2>
+<h2>🛏 Room Management</h2>
 
-    <div id="roomGrid" class="room-grid"></div>
+<div id="roomGrid" class="room-grid"></div>
 
 </div>
 
@@ -324,65 +284,65 @@ button{
 <!-- NEW BOOKING -->
 <div class="section">
 
-    <h2>➕ New Booking</h2>
+<h2>➕ New Booking</h2>
 
-    <div class="form-grid">
+<div class="form-grid">
 
-        <div>
-            <label>Customer Name</label>
-            <input id="customerName" type="text">
-        </div>
+<div>
+<label>Customer Name</label>
+<input id="customerName" type="text">
+</div>
 
-        <div>
-            <label>Mobile Number</label>
-            <input id="mobile" type="text">
-        </div>
+<div>
+<label>Mobile Number</label>
+<input id="mobile" type="text">
+</div>
 
-        <div>
-            <label>Customer Address</label>
-            <input id="address" type="text">
-        </div>
+<div>
+<label>Customer Address</label>
+<input id="address" type="text">
+</div>
 
-        <div>
-            <label>Select Room</label>
-            <select id="roomNumber"></select>
-        </div>
+<div>
+<label>Select Room</label>
+<select id="roomNumber"></select>
+</div>
 
-        <div>
-            <label>Check-In Date</label>
-            <input id="checkInDate" type="date">
-        </div>
+<div>
+<label>Check-In Date</label>
+<input id="checkInDate" type="date">
+</div>
 
-        <div>
-            <label>Check-In Time</label>
-            <input id="checkInTime" type="time">
-        </div>
+<div>
+<label>Check-In Time</label>
+<input id="checkInTime" type="time">
+</div>
 
-        <div>
-            <label>Check-Out Date</label>
-            <input id="checkOutDate" type="date">
-        </div>
+<div>
+<label>Check-Out Date</label>
+<input id="checkOutDate" type="date">
+</div>
 
-        <div>
-            <label>Check-Out Time</label>
-            <input id="checkOutTime" type="time">
-        </div>
+<div>
+<label>Check-Out Time</label>
+<input id="checkOutTime" type="time">
+</div>
 
-        <div>
-            <label>Advance Amount</label>
-            <input id="advance" type="number" value="0">
-        </div>
+<div>
+<label>Advance Amount</label>
+<input id="advance" type="number" value="0">
+</div>
 
-        <div>
-            <label>Total Amount</label>
-            <input id="total" type="number" value="0">
-        </div>
+<div>
+<label>Total Amount</label>
+<input id="total" type="number" value="0">
+</div>
 
-    </div>
+</div>
 
-    <button class="save-btn" onclick="saveBooking()">
-        💾 Save Booking
-    </button>
+<button class="save-btn" onclick="saveBooking()">
+💾 Save Booking
+</button>
 
 </div>
 
@@ -390,16 +350,15 @@ button{
 <!-- CUSTOMER MANAGEMENT -->
 <div class="section">
 
-    <h2>👤 Customer Management</h2>
+<h2>👤 Customer Management</h2>
 
-    <input
-        id="customerSearch"
-        type="text"
-        placeholder="Search customer name or mobile..."
-        oninput="searchCustomer()"
-    >
+<input
+id="customerSearch"
+type="text"
+placeholder="Search customer name or mobile..."
+oninput="searchCustomer()">
 
-    <div id="customerResults"></div>
+<div id="customerResults"></div>
 
 </div>
 
@@ -407,9 +366,9 @@ button{
 <!-- BOOKING LIST -->
 <div class="section">
 
-    <h2>📋 Booking List</h2>
+<h2>📋 Booking List</h2>
 
-    <div id="bookingList"></div>
+<div id="bookingList"></div>
 
 </div>
 
@@ -417,130 +376,137 @@ button{
 <!-- BILLING -->
 <div class="section">
 
-    <h2>🧾 Billing / Invoice</h2>
+<h2>🧾 Billing / Invoice</h2>
 
-    <div id="billingInfo">
-        <p>Select <b>🧾 Bill</b> from a booking to view the bill.</p>
-    </div>
+<div id="billingInfo">
+<p>Select <b>🧾 Bill</b> from a booking to view the bill.</p>
+</div>
 
 </div>
 
 </div>
 
 <div class="footer">
-    Hotel Krishnam © 2026
+Hotel Krishnam © 2026
 </div>
 
 
 <script>
 
-const defaultRooms = [
+const defaultRooms=[
 
-    {number:"101", type:"Non-AC", status:"Available"},
-    {number:"102", type:"Non-AC", status:"Available"},
-    {number:"201", type:"AC", status:"Available"},
-    {number:"202", type:"AC", status:"Available"},
-    {number:"203", type:"AC", status:"Available"},
+{number:"101",type:"AC",status:"Available"},
+{number:"102",type:"AC",status:"Available"},
+{number:"103",type:"AC",status:"Available"},
+{number:"104",type:"AC",status:"Available"},
+{number:"105",type:"AC",status:"Available"},
 
-    {number:"204", type:"AC", status:"Available"},
-    {number:"301", type:"AC", status:"Available"},
-    {number:"302", type:"AC", status:"Available"},
-    {number:"303", type:"AC", status:"Available"},
-    {number:"304", type:"AC", status:"Available"}
+{number:"106",type:"Non-AC",status:"Available"},
+{number:"107",type:"Non-AC",status:"Available"},
+{number:"108",type:"Non-AC",status:"Available"},
+{number:"109",type:"Non-AC",status:"Available"},
+{number:"110",type:"Non-AC",status:"Available"}
 
 ];
 
 
-let rooms =
-    JSON.parse(localStorage.getItem("hotelRooms")) ||
-    JSON.parse(JSON.stringify(defaultRooms));
+let rooms=
+JSON.parse(localStorage.getItem("hotelRooms"))||
+JSON.parse(JSON.stringify(defaultRooms));
 
-let bookings =
-    JSON.parse(localStorage.getItem("hotelBookings")) || [];
+let bookings=
+JSON.parse(localStorage.getItem("hotelBookings"))||[];
+
+
+/* पुराने data में Cleaning status को भी support करें */
+
+rooms.forEach(room=>{
+
+if(!["Available","Booked","Occupied","Cleaning"]
+.includes(room.status)){
+
+room.status="Available";
+
+}
+
+});
 
 
 function saveData(){
 
-    localStorage.setItem(
-        "hotelRooms",
-        JSON.stringify(rooms)
-    );
+localStorage.setItem(
+"hotelRooms",
+JSON.stringify(rooms)
+);
 
-    localStorage.setItem(
-        "hotelBookings",
-        JSON.stringify(bookings)
-    );
+localStorage.setItem(
+"hotelBookings",
+JSON.stringify(bookings)
+);
 
 }
 
 
 function escapeHTML(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
-/* ROOM DISPLAY */
+/* ROOMS */
 
 function renderRooms(){
 
-    const grid =
-        document.getElementById("roomGrid");
+const grid=document.getElementById("roomGrid");
 
-    const select =
-        document.getElementById("roomNumber");
+const select=document.getElementById("roomNumber");
 
-    grid.innerHTML="";
-    select.innerHTML="";
-
-    rooms.forEach(room => {
-
-        const div =
-            document.createElement("div");
-
-        let cls =
-            room.status.toLowerCase();
-
-        if(cls==="non-ac"){
-            cls="available";
-        }
-
-        div.className="room "+cls;
-
-        div.innerHTML=
-            `
-            Room ${room.number}<br>
-            ${room.type}<br>
-            ${room.status}
-            `;
-
-        grid.appendChild(div);
+grid.innerHTML="";
+select.innerHTML="";
 
 
-        if(room.status==="Available"){
+rooms.forEach(room=>{
 
-            const option =
-                document.createElement("option");
+const div=document.createElement("div");
 
-            option.value=room.number;
+div.className=
+"room "+
+room.status.toLowerCase();
 
-            option.textContent=
-                `Room ${room.number} - ${room.type}`;
+div.innerHTML=
+`
+Room ${room.number}<br>
+${room.type}<br>
+${room.status}
+`;
 
-            select.appendChild(option);
-
-        }
-
-    });
+grid.appendChild(div);
 
 
-    updateDashboard();
+/* केवल Available rooms booking में दिखें */
+
+if(room.status==="Available"){
+
+const option=document.createElement("option");
+
+option.value=room.number;
+
+option.textContent=
+`Room ${room.number} - ${room.type}`;
+
+select.appendChild(option);
+
+}
+
+});
+
+updateDashboard();
 
 }
 
@@ -549,19 +515,26 @@ function renderRooms(){
 
 function updateDashboard(){
 
-    document.getElementById("totalRooms")
-        .textContent=rooms.length;
+const available=
+rooms.filter(r=>r.status==="Available").length;
 
-    const available =
-        rooms.filter(
-            r => r.status==="Available"
-        ).length;
+const booked=
+rooms.filter(r=>r.status==="Booked").length;
 
-    document.getElementById("availableRooms")
-        .textContent=available;
+const cleaning=
+rooms.filter(r=>r.status==="Cleaning").length;
 
-    document.getElementById("busyRooms")
-        .textContent=rooms.length-available;
+document.getElementById("totalRooms")
+.textContent=rooms.length;
+
+document.getElementById("availableRooms")
+.textContent=available;
+
+document.getElementById("bookedRooms")
+.textContent=booked;
+
+document.getElementById("cleaningRooms")
+.textContent=cleaning;
 
 }
 
@@ -570,100 +543,94 @@ function updateDashboard(){
 
 function saveBooking(){
 
-    const customerName =
-        document.getElementById("customerName").value.trim();
+const customerName=
+document.getElementById("customerName").value.trim();
 
-    const mobile =
-        document.getElementById("mobile").value.trim();
+const mobile=
+document.getElementById("mobile").value.trim();
 
-    const address =
-        document.getElementById("address").value.trim();
+const address=
+document.getElementById("address").value.trim();
 
-    const roomNumber =
-        document.getElementById("roomNumber").value;
+const roomNumber=
+document.getElementById("roomNumber").value;
 
-    const checkInDate =
-        document.getElementById("checkInDate").value;
+const checkInDate=
+document.getElementById("checkInDate").value;
 
-    const checkInTime =
-        document.getElementById("checkInTime").value;
+const checkInTime=
+document.getElementById("checkInTime").value;
 
-    const checkOutDate =
-        document.getElementById("checkOutDate").value;
+const checkOutDate=
+document.getElementById("checkOutDate").value;
 
-    const checkOutTime =
-        document.getElementById("checkOutTime").value;
+const checkOutTime=
+document.getElementById("checkOutTime").value;
 
-    const advance =
-        Number(document.getElementById("advance").value) || 0;
+const advance=
+Number(document.getElementById("advance").value)||0;
 
-    const total =
-        Number(document.getElementById("total").value) || 0;
-
-
-    if(!customerName){
-
-        alert("Please enter Customer Name");
-        return;
-
-    }
+const total=
+Number(document.getElementById("total").value)||0;
 
 
-    if(!roomNumber){
+if(!customerName){
 
-        alert("Please select a room");
-        return;
+alert("Please enter Customer Name");
+return;
 
-    }
+}
 
+if(!roomNumber){
 
-    const booking={
+alert("Please select a room");
+return;
 
-        customerName,
-        mobile,
-        address,
-        roomNumber,
-        checkInDate,
-        checkInTime,
-        checkOutDate,
-        checkOutTime,
-        advance,
-        total,
-        status:"Booked"
-
-    };
+}
 
 
-    bookings.push(booking);
+bookings.push({
+
+customerName,
+mobile,
+address,
+roomNumber,
+checkInDate,
+checkInTime,
+checkOutDate,
+checkOutTime,
+advance,
+total,
+status:"Booked"
+
+});
 
 
-    const room =
-        rooms.find(
-            r => r.number===roomNumber
-        );
+const room=
+rooms.find(r=>r.number===roomNumber);
 
-    if(room){
+if(room){
 
-        room.status="Booked";
+room.status="Booked";
 
-    }
+}
 
 
-    saveData();
+saveData();
 
-    renderRooms();
+renderRooms();
 
-    renderBookings();
-
-
-    document.getElementById("customerName").value="";
-    document.getElementById("mobile").value="";
-    document.getElementById("address").value="";
-    document.getElementById("advance").value="0";
-    document.getElementById("total").value="0";
+renderBookings();
 
 
-    alert("Booking Saved Successfully!");
+document.getElementById("customerName").value="";
+document.getElementById("mobile").value="";
+document.getElementById("address").value="";
+document.getElementById("advance").value="0";
+document.getElementById("total").value="0";
+
+
+alert("Booking Saved Successfully!");
 
 }
 
@@ -672,179 +639,166 @@ function saveBooking(){
 
 function renderBookings(){
 
-    const list =
-        document.getElementById("bookingList");
+const list=document.getElementById("bookingList");
 
-    list.innerHTML="";
-
-
-    if(bookings.length===0){
-
-        list.innerHTML=
-            "<p>No booking found.</p>";
-
-        return;
-
-    }
+list.innerHTML="";
 
 
-    bookings.forEach((booking,index)=>{
+if(bookings.length===0){
 
-        let buttons="";
+list.innerHTML="<p>No booking found.</p>";
 
-
-        buttons += `
-        <button
-            class="view-btn"
-            onclick="viewBooking(${index})">
-            👁 View
-        </button>
-        `;
-
-
-        if(booking.status==="Booked"){
-
-            buttons += `
-            <button
-                class="checkin-btn"
-                onclick="checkInBooking(${index})">
-                🟢 Check-In
-            </button>
-            `;
-
-        }
-
-
-        if(booking.status==="Checked-In"){
-
-            buttons += `
-            <button
-                class="checkout-btn"
-                onclick="checkOutBooking(${index})">
-                🔴 Check-Out
-            </button>
-            `;
-
-        }
-
-
-        /* BILL BUTTON */
-
-        buttons += `
-        <button
-            class="bill-btn"
-            onclick="createBill(${index})">
-            🧾 Bill
-        </button>
-        `;
-
-
-        buttons += `
-        <button
-            class="delete-btn"
-            onclick="deleteBooking(${index})">
-            🗑 Delete
-        </button>
-        `;
-
-
-        list.innerHTML += `
-
-        <div class="booking">
-
-            <h3>
-                🛏 Room ${escapeHTML(booking.roomNumber)}
-            </h3>
-
-            <p>
-                <b>Customer:</b>
-                ${escapeHTML(booking.customerName)}
-            </p>
-
-            <p>
-                <b>Mobile:</b>
-                ${maskMobile(booking.mobile)}
-            </p>
-
-            <p>
-                <b>Address:</b>
-                ${escapeHTML(booking.address || "-")}
-            </p>
-
-            <p>
-                <b>Check-In:</b>
-                ${escapeHTML(booking.checkInDate)}
-                ${escapeHTML(booking.checkInTime)}
-            </p>
-
-            <p>
-                <b>Check-Out:</b>
-                ${escapeHTML(booking.checkOutDate)}
-                ${escapeHTML(booking.checkOutTime)}
-            </p>
-
-            <p>
-                <b>Advance:</b>
-                ₹${Number(booking.advance)||0}
-            </p>
-
-            <p>
-                <b>Total:</b>
-                ₹${Number(booking.total)||0}
-            </p>
-
-            <p>
-                <b>Status:</b>
-                <span class="status">
-                    ${escapeHTML(booking.status)}
-                </span>
-            </p>
-
-            <div>
-                ${buttons}
-            </div>
-
-        </div>
-
-        `;
-
-    });
+return;
 
 }
 
 
-function maskMobile(number){
+bookings.forEach((booking,index)=>{
 
-    const value=String(number || "");
+let buttons="";
 
-    if(value.length<=4){
-        return value;
-    }
 
-    return "******"+value.slice(-4);
+buttons+=`
+<button
+class="view-btn"
+onclick="viewBooking(${index})">
+👁 View
+</button>
+`;
+
+
+if(booking.status==="Booked"){
+
+buttons+=`
+<button
+class="checkin-btn"
+onclick="checkInBooking(${index})">
+🟢 Check-In
+</button>
+`;
 
 }
 
 
-/* VIEW BOOKING */
+if(booking.status==="Checked-In"){
+
+buttons+=`
+<button
+class="checkout-btn"
+onclick="checkOutBooking(${index})">
+🔴 Check-Out
+</button>
+`;
+
+}
+
+
+/* BILL BUTTON */
+
+buttons+=`
+<button
+class="bill-btn"
+onclick="createBill(${index})">
+🧾 Bill
+</button>
+`;
+
+
+/* DELETE */
+
+buttons+=`
+<button
+class="delete-btn"
+onclick="deleteBooking(${index})">
+🗑 Delete
+</button>
+`;
+
+
+list.innerHTML+=`
+
+<div class="booking">
+
+<h3>
+🛏 Room ${escapeHTML(booking.roomNumber)}
+</h3>
+
+<p>
+<b>Customer:</b>
+${escapeHTML(booking.customerName)}
+</p>
+
+<p>
+<b>Mobile:</b>
+${escapeHTML(booking.mobile)}
+</p>
+
+<p>
+<b>Address:</b>
+${escapeHTML(booking.address||"-")}
+</p>
+
+<p>
+<b>Check-In:</b>
+${escapeHTML(booking.checkInDate)}
+${escapeHTML(booking.checkInTime)}
+</p>
+
+<p>
+<b>Check-Out:</b>
+${escapeHTML(booking.checkOutDate)}
+${escapeHTML(booking.checkOutTime)}
+</p>
+
+<p>
+<b>Advance:</b>
+₹${Number(booking.advance)||0}
+</p>
+
+<p>
+<b>Total:</b>
+₹${Number(booking.total)||0}
+</p>
+
+<p>
+<b>Status:</b>
+<span class="status">
+${escapeHTML(booking.status)}
+</span>
+</p>
+
+<div>
+${buttons}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* VIEW */
 
 function viewBooking(index){
 
-    const b=bookings[index];
+const b=bookings[index];
 
-    alert(
+alert(
 
-        "Customer: "+b.customerName+
-        "\nMobile: "+b.mobile+
-        "\nAddress: "+(b.address || "-")+
-        "\nRoom: "+b.roomNumber+
-        "\nCheck-In: "+b.checkInDate+" "+b.checkInTime+
-        "\nCheck-Out: "+b.checkOutDate+" "+b.checkOutTime+
-        "\nAdvance: ₹"+(b.advance||0)+
-        "\nTotal: ₹"+(b.total||0)+
-        "\nStatus: "+b.status
+"Customer: "+b.customerName+
+"\nMobile: "+b.mobile+
+"\nAddress: "+(b.address||"-")+
+"\nRoom: "+b.roomNumber+
+"\nCheck-In: "+b.checkInDate+" "+b.checkInTime+
+"\nCheck-Out: "+b.checkOutDate+" "+b.checkOutTime+
+"\nAdvance: ₹"+(b.advance||0)+
+"\nTotal: ₹"+(b.total||0)+
+"\nStatus: "+b.status
 
-    );
+);
 
 }
 
@@ -853,58 +807,99 @@ function viewBooking(index){
 
 function checkInBooking(index){
 
-    const booking=bookings[index];
+const booking=bookings[index];
 
-    booking.status="Checked-In";
-
-
-    const room =
-        rooms.find(
-            r => r.number===booking.roomNumber
-        );
-
-    if(room){
-
-        room.status="Occupied";
-
-    }
+booking.status="Checked-In";
 
 
-    saveData();
+const room=
+rooms.find(r=>r.number===booking.roomNumber);
 
-    renderRooms();
+if(room){
 
-    renderBookings();
+room.status="Occupied";
 
 }
 
 
-/* CHECK OUT */
+saveData();
+
+renderRooms();
+
+renderBookings();
+
+}
+
+
+/* CHECK OUT → CLEANING */
 
 function checkOutBooking(index){
 
-    const booking=bookings[index];
+const booking=bookings[index];
 
-    booking.status="Checked-Out";
-
-
-    const room =
-        rooms.find(
-            r => r.number===booking.roomNumber
-        );
-
-    if(room){
-
-        room.status="Available";
-
-    }
+booking.status="Checked-Out";
 
 
-    saveData();
+const room=
+rooms.find(r=>r.number===booking.roomNumber);
 
-    renderRooms();
+if(room){
 
-    renderBookings();
+room.status="Cleaning";
+
+}
+
+
+saveData();
+
+renderRooms();
+
+renderBookings();
+
+
+alert(
+"Check-Out complete.\nRoom "+booking.roomNumber+
+" is now in Cleaning."
+);
+
+}
+
+
+/* MARK ROOM AVAILABLE */
+
+function markRoomAvailable(roomNumber){
+
+const room=
+rooms.find(r=>r.number===roomNumber);
+
+if(!room){
+
+return;
+
+}
+
+
+if(room.status!=="Cleaning"){
+
+return;
+
+}
+
+
+room.status="Available";
+
+
+saveData();
+
+renderRooms();
+
+renderBookings();
+
+
+alert(
+"Room "+roomNumber+
+" is now Available."
+);
 
 }
 
@@ -913,36 +908,38 @@ function checkOutBooking(index){
 
 function deleteBooking(index){
 
-    if(!confirm("Delete this booking?")){
+if(!confirm("Delete this booking?")){
 
-        return;
+return;
 
-    }
-
-
-    const booking=bookings[index];
+}
 
 
-    const room =
-        rooms.find(
-            r => r.number===booking.roomNumber
-        );
+const booking=bookings[index];
 
-    if(room){
-
-        room.status="Available";
-
-    }
+const room=
+rooms.find(r=>r.number===booking.roomNumber);
 
 
-    bookings.splice(index,1);
+/*
+अगर booking delete हो रही है और room Cleaning में है
+तो room को Available कर देंगे।
+*/
+
+if(room){
+
+room.status="Available";
+
+}
 
 
-    saveData();
+bookings.splice(index,1);
 
-    renderRooms();
+saveData();
 
-    renderBookings();
+renderRooms();
+
+renderBookings();
 
 }
 
@@ -951,91 +948,90 @@ function deleteBooking(index){
 
 function searchCustomer(){
 
-    const search =
-        document.getElementById("customerSearch")
-        .value
-        .toLowerCase()
-        .trim();
+const search=
+document.getElementById("customerSearch")
+.value
+.toLowerCase()
+.trim();
 
-    const result =
-        document.getElementById("customerResults");
+const result=
+document.getElementById("customerResults");
 
-    result.innerHTML="";
-
-
-    if(!search){
-
-        return;
-
-    }
+result.innerHTML="";
 
 
-    const found =
-        bookings.filter(b =>
+if(!search){
 
-            String(b.customerName)
-                .toLowerCase()
-                .includes(search)
+return;
 
-            ||
-
-            String(b.mobile)
-                .toLowerCase()
-                .includes(search)
-
-        );
+}
 
 
-    if(found.length===0){
+const found=
+bookings.filter(b=>
 
-        result.innerHTML=
-            "<p>No customer found.</p>";
+String(b.customerName)
+.toLowerCase()
+.includes(search)
 
-        return;
+||
 
-    }
+String(b.mobile)
+.toLowerCase()
+.includes(search)
+
+);
 
 
-    found.forEach(b=>{
+if(found.length===0){
 
-        result.innerHTML += `
+result.innerHTML="<p>No customer found.</p>";
 
-        <div class="customer-box">
+return;
 
-            <b>Name:</b>
-            ${escapeHTML(b.customerName)}
-            <br>
+}
 
-            <b>Mobile:</b>
-            ${escapeHTML(b.mobile)}
-            <br>
 
-            <b>Address:</b>
-            ${escapeHTML(b.address || "-")}
-            <br>
+found.forEach(b=>{
 
-            <b>Room:</b>
-            ${escapeHTML(b.roomNumber)}
-            <br>
+result.innerHTML+=`
 
-            <b>Check-In:</b>
-            ${escapeHTML(b.checkInDate)}
-            ${escapeHTML(b.checkInTime)}
-            <br>
+<div class="customer-box">
 
-            <b>Check-Out:</b>
-            ${escapeHTML(b.checkOutDate)}
-            ${escapeHTML(b.checkOutTime)}
-            <br>
+<b>Name:</b>
+${escapeHTML(b.customerName)}
+<br>
 
-            <b>Status:</b>
-            ${escapeHTML(b.status)}
+<b>Mobile:</b>
+${escapeHTML(b.mobile)}
+<br>
 
-        </div>
+<b>Address:</b>
+${escapeHTML(b.address||"-")}
+<br>
 
-        `;
+<b>Room:</b>
+${escapeHTML(b.roomNumber)}
+<br>
 
-    });
+<b>Check-In:</b>
+${escapeHTML(b.checkInDate)}
+${escapeHTML(b.checkInTime)}
+<br>
+
+<b>Check-Out:</b>
+${escapeHTML(b.checkOutDate)}
+${escapeHTML(b.checkOutTime)}
+<br>
+
+<b>Status:</b>
+${escapeHTML(b.status)}
+
+</div>
+
+`;
+
+});
 
 }
 
@@ -1044,159 +1040,137 @@ function searchCustomer(){
 
 function createBill(index){
 
-    const booking=bookings[index];
+const booking=bookings[index];
 
-    if(!booking){
-
-        return;
-
-    }
+if(!booking)return;
 
 
-    const total =
-        Number(booking.total)||0;
+const total=
+Number(booking.total)||0;
 
-    const advance =
-        Number(booking.advance)||0;
+const advance=
+Number(booking.advance)||0;
 
-    const balance =
-        Math.max(0,total-advance);
-
-
-    const billHTML = `
-
-    <div id="printArea" class="bill">
-
-        <div class="bill-header">
-
-            <h1>Hotel Krishnam</h1>
-
-            <p>
-                <b>Hotel Management System</b>
-            </p>
-
-            <p>
-                <b>INVOICE / BILL</b>
-            </p>
-
-        </div>
+const balance=
+Math.max(0,total-advance);
 
 
-        <table class="bill-table">
+const billHTML=`
 
-            <tr>
-                <td><b>Customer Name</b></td>
-                <td>
-                    ${escapeHTML(booking.customerName)}
-                </td>
-            </tr>
+<div id="printArea" class="bill">
 
-            <tr>
-                <td><b>Mobile</b></td>
-                <td>
-                    ${escapeHTML(booking.mobile)}
-                </td>
-            </tr>
+<div class="bill-header">
 
-            <tr>
-                <td><b>Address</b></td>
-                <td>
-                    ${escapeHTML(booking.address || "-")}
-                </td>
-            </tr>
+<h1>Hotel Krishnam</h1>
 
-            <tr>
-                <td><b>Room Number</b></td>
-                <td>
-                    ${escapeHTML(booking.roomNumber)}
-                </td>
-            </tr>
+<p><b>Hotel Management System</b></p>
 
-            <tr>
-                <td><b>Check-In</b></td>
-                <td>
-                    ${escapeHTML(booking.checkInDate)}
-                    ${escapeHTML(booking.checkInTime)}
-                </td>
-            </tr>
+<p><b>INVOICE / BILL</b></p>
 
-            <tr>
-                <td><b>Check-Out</b></td>
-                <td>
-                    ${escapeHTML(booking.checkOutDate)}
-                    ${escapeHTML(booking.checkOutTime)}
-                </td>
-            </tr>
-
-            <tr>
-                <td><b>Total Amount</b></td>
-                <td>
-                    ₹${total}
-                </td>
-            </tr>
-
-            <tr>
-                <td><b>Advance Paid</b></td>
-                <td>
-                    ₹${advance}
-                </td>
-            </tr>
-
-            <tr class="bill-total">
-                <td><b>Balance Due</b></td>
-                <td>
-                    <b>₹${balance}</b>
-                </td>
-            </tr>
-
-        </table>
+</div>
 
 
-        <p style="text-align:center;margin-top:25px">
-            Thank you for staying at Hotel Krishnam.
-        </p>
+<table class="bill-table">
+
+<tr>
+<td><b>Customer Name</b></td>
+<td>${escapeHTML(booking.customerName)}</td>
+</tr>
+
+<tr>
+<td><b>Mobile</b></td>
+<td>${escapeHTML(booking.mobile)}</td>
+</tr>
+
+<tr>
+<td><b>Address</b></td>
+<td>${escapeHTML(booking.address||"-")}</td>
+</tr>
+
+<tr>
+<td><b>Room Number</b></td>
+<td>${escapeHTML(booking.roomNumber)}</td>
+</tr>
+
+<tr>
+<td><b>Check-In</b></td>
+<td>
+${escapeHTML(booking.checkInDate)}
+${escapeHTML(booking.checkInTime)}
+</td>
+</tr>
+
+<tr>
+<td><b>Check-Out</b></td>
+<td>
+${escapeHTML(booking.checkOutDate)}
+${escapeHTML(booking.checkOutTime)}
+</td>
+</tr>
+
+<tr>
+<td><b>Total Amount</b></td>
+<td>₹${total}</td>
+</tr>
+
+<tr>
+<td><b>Advance Paid</b></td>
+<td>₹${advance}</td>
+</tr>
+
+<tr class="bill-total">
+<td><b>Balance Due</b></td>
+<td><b>₹${balance}</b></td>
+</tr>
+
+</table>
 
 
-        <div
-            class="no-print"
-            style="text-align:center;margin-top:20px">
-
-            <button
-                class="print-btn"
-                onclick="window.print()">
-                🖨️ Print Bill
-            </button>
-
-            <button
-                class="close-btn"
-                onclick="closeBill()">
-                ✖ Close
-            </button>
-
-        </div>
-
-    </div>
-
-    `;
+<p style="text-align:center;margin-top:25px">
+Thank you for staying at Hotel Krishnam.
+</p>
 
 
-    document.getElementById("billingInfo")
-        .innerHTML=billHTML;
+<div
+class="no-print"
+style="text-align:center;margin-top:20px">
+
+<button
+class="print-btn"
+onclick="window.print()">
+🖨️ Print Bill
+</button>
+
+<button
+class="close-btn"
+onclick="closeBill()">
+✖ Close
+</button>
+
+</div>
+
+</div>
+
+`;
 
 
-    document.getElementById("billingInfo")
-        .scrollIntoView({
-            behavior:"smooth"
-        });
+document.getElementById("billingInfo")
+.innerHTML=billHTML;
+
+
+document.getElementById("billingInfo")
+.scrollIntoView({
+behavior:"smooth"
+});
 
 }
 
 
 function closeBill(){
 
-    document.getElementById("billingInfo")
-        .innerHTML=
-        "<p>Select 🧾 Bill from a booking to view the bill.</p>";
+document.getElementById("billingInfo")
+.innerHTML=
+"<p>Select 🧾 Bill from a booking to view the bill.</p>";
 
 }
 
