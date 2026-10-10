@@ -1898,7 +1898,7 @@ renderBookings();
 
     
 <!-- Hotel Krishnam: Backup and Restore -->
-<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;margin:15px 0;border-radius:12px;">
+<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;id="hkBackup"margin:15px 0;border-radius:12px;">
   <h2 style="text-align:center;color:#183153;">Hotel Krishnam</h2>
   <h3>Backup & Restore Data</h3>
 
@@ -2030,6 +2030,129 @@ window.hkRestoreBackup = function () {
 
   reader.readAsText(file);
 };
+</script>
+
+    
+<!-- Hotel Krishnam: Mobile Dashboard -->
+<section id="hkMainDashboard" style="font-family:Arial,sans-serif;background:#eef2f7;padding:16px;margin:15px 0;border-radius:14px;color:#183153;">
+
+  <header style="background:linear-gradient(135deg,#183153,#276678);color:white;padding:22px 16px;border-radius:14px;">
+    <div style="font-size:13px;letter-spacing:2px;">WELCOME TO</div>
+    <h1 style="margin:8px 0;font-size:27px;">HOTEL KRISHNAM</h1>
+    <p style="margin:0;">Hotel Management Dashboard</p>
+  </header>
+
+  <h3 style="margin-top:22px;">Overview</h3>
+
+  <div id="hkDashCards" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+    <div style="background:white;padding:16px;border-radius:12px;">
+      <div style="font-size:13px;color:#667085;">Total Rooms</div>
+      <div id="hkDashRooms" style="font-size:27px;font-weight:bold;">10</div>
+      <div style="font-size:12px;">Rooms 101–110</div>
+    </div>
+
+    <div style="background:white;padding:16px;border-radius:12px;">
+      <div style="font-size:13px;color:#667085;">Saved Stays</div>
+      <div id="hkDashBookings" style="font-size:27px;font-weight:bold;">0</div>
+      <div style="font-size:12px;">Stay records</div>
+    </div>
+
+    <div style="background:white;padding:16px;border-radius:12px;">
+      <div style="font-size:13px;color:#667085;">Payment Received</div>
+      <div id="hkDashPaid" style="font-size:22px;font-weight:bold;color:#198754;">₹0</div>
+      <div style="font-size:12px;">From saved stays</div>
+    </div>
+
+    <div style="background:white;padding:16px;border-radius:12px;">
+      <div style="font-size:13px;color:#667085;">Balance Due</div>
+      <div id="hkDashDue" style="font-size:22px;font-weight:bold;color:#b45309;">₹0</div>
+      <div style="font-size:12px;">Remaining amount</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px;">Quick Menu</h3>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
+    <button type="button" onclick="hkGoToSection('hkStayBill')" style="padding:16px 8px;background:#183153;color:white;border:0;border-radius:10px;font-weight:bold;">📝 Check-in / Bill</button>
+
+    <button type="button" onclick="hkGoToSection('hkAutoRoomStatus')" style="padding:16px 8px;background:#276678;color:white;border:0;border-radius:10px;font-weight:bold;">🏨 Room Status</button>
+
+    <button type="button" onclick="hkGoToSection('hkPaymentUpdate')" style="padding:16px 8px;background:#198754;color:white;border:0;border-radius:10px;font-weight:bold;">💰 Payment Update</button>
+
+    <button type="button" onclick="hkGoToSection('hkSearchBookings')" style="padding:16px 8px;background:#6f42c1;color:white;border:0;border-radius:10px;font-weight:bold;">🔎 Search Booking</button>
+
+    <button type="button" onclick="hkGoToSection('hkDailyReport')" style="padding:16px 8px;background:#b45309;color:white;border:0;border-radius:10px;font-weight:bold;">📊 Daily Report</button>
+
+    <button type="button" onclick="hkGoToSection('hkBackup')" style="padding:16px 8px;background:#475467;color:white;border:0;border-radius:10px;font-weight:bold;">💾 Backup / Restore</button>
+  </div>
+
+  <p style="text-align:center;font-size:12px;color:#667085;margin-top:22px;">
+    Hotel Krishnam • Management System
+  </p>
+</section>
+
+<script>
+(function () {
+  function read(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function money(value) {
+    return "₹" + Number(value || 0).toLocaleString("en-IN", {
+      maximumFractionDigits: 2
+    });
+  }
+
+  window.hkGoToSection = function (id) {
+    // Search input is inside the search section, so find its parent section.
+    let target = document.getElementById(id);
+
+    if (id === "hkSearchBookings") {
+      target = document.getElementById("hkSearchInput")?.closest("section");
+    }
+
+    if (id === "hkBackup") {
+      target = document.getElementById("hkBackupFile")?.closest("section");
+    }
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      alert("This section was not found on the page. Please check that its code is installed.");
+    }
+  };
+
+  window.hkRefreshDashboard = function () {
+    const stays = read("hotelKrishnamStays");
+    const transactions = read("hotelKrishnamPaymentTransactions");
+
+    let paid = 0;
+    let due = 0;
+
+    stays.forEach(stay => {
+      const extraPaid = transactions
+        .filter(tx => String(tx.stayId) === String(stay.id))
+        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+      paid += Number(stay.paid || 0) + extraPaid;
+      due += Math.max(
+        0,
+        Number(stay.total || 0) - Number(stay.paid || 0) - extraPaid
+      );
+    });
+
+    document.getElementById("hkDashRooms").textContent = "10";
+    document.getElementById("hkDashBookings").textContent = stays.length;
+    document.getElementById("hkDashPaid").textContent = money(paid);
+    document.getElementById("hkDashDue").textContent = money(due);
+  };
+
+  window.hkRefreshDashboard();
+})();
 </script>
 
 </body>
