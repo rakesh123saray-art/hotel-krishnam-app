@@ -1469,17 +1469,11 @@ renderBookings();
 </script>
 
     
-<!-- Hotel Krishnam Automatic Room Status -->
-<section id="hkAutoRoomStatus" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:15px;margin:15px 0;border-radius:12px;">
-  <h2 style="text-align:center;color:#183153;">Automatic Room Status</h2>
-  <p style="text-align:center;">Room status is based on saved Check-in / Check-out records.</p>
-  <div id="hkAutoRoomGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;"></div>
-</section>
 
+<!-- Hotel Krishnam: Prevent Double Booking -->
 <script>
 (function () {
   const stayKey = "hotelKrishnamStays";
-  const grid = document.getElementById("hkAutoRoomGrid");
 
   function readStays() {
     try {
@@ -1489,51 +1483,56 @@ renderBookings();
     }
   }
 
-  function renderAutoRoomStatus() {
-    const stays = readStays();
-    grid.innerHTML = "";
-
-    for (let room = 101; room <= 110; room++) {
-      const now = new Date();
-      const activeStay = stays.find(stay =>
-        Number(stay.room) === room &&
-        stay.checkIn &&
-        stay.checkOut &&
-        new Date(stay.checkIn) <= now &&
-        new Date(stay.checkOut) > now
-      );
-
-      let status = "Available";
-      let background = "#d8f3dc";
-
-      if (activeStay) {
-        if (Number(activeStay.due) > 0) {
-          status = "Payment Due";
-          background = "#ffe5b4";
-        } else {
-          status = "Booked";
-          background = "#f8d7da";
-        }
-      }
-
-      const card = document.createElement("div");
-      card.style.cssText = `background:${background};padding:14px;border-radius:10px;text-align:center;`;
-
-      const heading = document.createElement("h3");
-      heading.textContent = "Room " + room;
-
-      const statusText = document.createElement("p");
-      statusText.textContent = status;
-      statusText.style.fontWeight = "bold";
-
-      card.appendChild(heading);
-      card.appendChild(statusText);
-      grid.appendChild(card);
-    }
+  function overlaps(startA, endA, startB, endB) {
+    return startA < endB && startB < endA;
   }
 
-  renderAutoRoomStatus();
-  window.addEventListener("storage", renderAutoRoomStatus);
+  const originalSave = window.hkSaveStay;
+
+  if (typeof originalSave !== "function") {
+    console.warn("Stay form not found. Check that the Stay & Bill code is installed first.");
+    return;
+  }
+
+  window.hkSaveStay = function () {
+    const room = document.getElementById("hkRoom").value;
+    const checkInValue = document.getElementById("hkIn").value;
+    const checkOutValue = document.getElementById("hkOut").value;
+
+    if (!room || !checkInValue || !checkOutValue) {
+      originalSave();
+      return;
+    }
+
+    const newStart = new Date(checkInValue).getTime();
+    const newEnd = new Date(checkOutValue).getTime();
+
+    if (!Number.isFinite(newStart) || !Number.isFinite(newEnd) || newEnd <= newStart) {
+      alert("Please enter a valid Check-in and Check-out date/time.");
+      return;
+    }
+
+    const conflict = readStays().find(stay => {
+      if (Number(stay.room) !== Number(room)) return false;
+
+      const oldStart = new Date(stay.checkIn).getTime();
+      const oldEnd = new Date(stay.checkOut).getTime();
+
+      return Number.isFinite(oldStart) &&
+             Number.isFinite(oldEnd) &&
+             overlaps(newStart, newEnd, oldStart, oldEnd);
+    });
+
+    if (conflict) {
+      alert(
+        "Room " + room + " is already booked for some of this time. " +
+        "Please choose another room or a different time."
+      );
+      return;
+    }
+
+    originalSave();
+  };
 })();
 </script>
 
