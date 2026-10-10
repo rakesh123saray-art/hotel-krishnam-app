@@ -1280,6 +1280,194 @@ renderBookings();
 </script>
 
 
+<!-- Hotel Krishnam: Check-in, Check-out and Customer Bill -->
+<section id="hkStayBill" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;margin:15px 0;border-radius:12px;">
+  <h2 style="text-align:center;color:#183153;">Hotel Krishnam</h2>
+  <h3>Check-in / Check-out & Customer Bill</h3>
+
+  <label>Room Number</label>
+  <select id="hkRoom" style="width:100%;padding:10px;margin:5px 0 12px;">
+    <option value="">Select Room</option>
+  </select>
+
+  <label>Customer Name</label>
+  <input id="hkCustomer" placeholder="Enter customer name" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
+
+  <label>Check-in Date & Time</label>
+  <input id="hkIn" type="datetime-local" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
+
+  <label>Check-out Date & Time</label>
+  <input id="hkOut" type="datetime-local" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
+
+  <label>Total Bill (₹)</label>
+  <input id="hkTotal" type="number" min="0" placeholder="Enter total bill" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
+
+  <label>Payment Received (₹)</label>
+  <input id="hkPaid" type="number" min="0" placeholder="Enter amount received" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
+
+  <button type="button" onclick="hkSaveStay()" style="padding:11px 16px;background:#183153;color:white;border:0;border-radius:7px;">Save Stay & Bill</button>
+  <button type="button" onclick="hkPrintBill()" style="padding:11px 16px;background:#198754;color:white;border:0;border-radius:7px;margin-left:5px;">Print Bill</button>
+
+  <div id="hkBillPreview" style="background:white;padding:15px;margin-top:16px;border:1px solid #ddd;"></div>
+
+  <h3>Saved Stays</h3>
+  <div id="hkStayList"></div>
+</section>
+
+<script>
+(function () {
+  const key = "hotelKrishnamStays";
+  const roomSelect = document.getElementById("hkRoom");
+
+  for (let n = 101; n <= 110; n++) {
+    const option = document.createElement("option");
+    option.value = n;
+    option.textContent = "Room " + n;
+    roomSelect.appendChild(option);
+  }
+
+  function getStays() {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function money(value) {
+    return "₹" + Number(value || 0).toLocaleString("en-IN");
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;",
+      '"': "&quot;", "'": "&#39;"
+    }[char]));
+  }
+
+  window.hkSaveStay = function () {
+    const room = document.getElementById("hkRoom").value;
+    const customer = document.getElementById("hkCustomer").value.trim();
+    const checkIn = document.getElementById("hkIn").value;
+    const checkOut = document.getElementById("hkOut").value;
+    const total = Number(document.getElementById("hkTotal").value);
+    const paid = Number(document.getElementById("hkPaid").value || 0);
+
+    if (!room || !customer || !checkIn || !checkOut ||
+        document.getElementById("hkTotal").value === "") {
+      alert("Please fill Room, Customer, Check-in, Check-out and Total Bill.");
+      return;
+    }
+
+    if (new Date(checkOut) <= new Date(checkIn)) {
+      alert("Check-out must be after Check-in.");
+      return;
+    }
+
+    if (total < 0 || paid < 0 || paid > total) {
+      alert("Payment must be between ₹0 and the total bill.");
+      return;
+    }
+
+    const stays = getStays();
+    const stay = {
+      id: Date.now(),
+      room,
+      customer,
+      checkIn,
+      checkOut,
+      total,
+      paid,
+      due: total - paid,
+      status: paid >= total ? "Paid" : "Payment Due"
+    };
+
+    stays.push(stay);
+    localStorage.setItem(key, JSON.stringify(stays));
+    window.hkCurrentBillId = stay.id;
+
+    render();
+    showBill(stay);
+    alert("Stay and bill saved on this device.");
+  };
+
+  function showBill(stay) {
+    document.getElementById("hkBillPreview").innerHTML = `
+      <h3 style="text-align:center;">HOTEL KRISHNAM</h3>
+      <p style="text-align:center;">Customer Bill / Receipt</p>
+      <hr>
+      <p><b>Receipt:</b> HK-${stay.id}</p>
+      <p><b>Customer:</b> ${escapeHtml(stay.customer)}</p>
+      <p><b>Room:</b> ${escapeHtml(stay.room)}</p>
+      <p><b>Check-in:</b> ${escapeHtml(stay.checkIn.replace("T", " "))}</p>
+      <p><b>Check-out:</b> ${escapeHtml(stay.checkOut.replace("T", " "))}</p>
+      <hr>
+      <p>Total Bill: <b>${money(stay.total)}</b></p>
+      <p>Payment Received: <b>${money(stay.paid)}</b></p>
+      <p>Balance Due: <b>${money(stay.due)}</b></p>
+      <p><b>Payment Status:</b> ${escapeHtml(stay.status)}</p>
+      <p style="text-align:center;">Thank you for staying with Hotel Krishnam!</p>
+    `;
+  }
+
+  window.hkPrintBill = function () {
+    const preview = document.getElementById("hkBillPreview");
+    if (!preview.innerText.trim()) {
+      alert("Please save a stay first to create a bill.");
+      return;
+    }
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Allow pop-ups in your browser to print the bill.");
+      return;
+    }
+
+    printWindow.document.write(`
+      <!doctype html><html><head><title>Hotel Krishnam Bill</title>
+      <style>body{font-family:Arial,sans-serif;padding:25px;max-width:600px;margin:auto}
+      hr{border:0;border-top:1px solid #aaa}</style></head>
+      <body>${preview.innerHTML}<script>window.onload=function(){window.print();};<\/script></body></html>
+    `);
+    printWindow.document.close();
+  };
+
+  function render() {
+    const stays = getStays();
+    document.getElementById("hkStayList").innerHTML = "";
+
+    if (!stays.length) {
+      document.getElementById("hkStayList").textContent = "No stays saved yet.";
+      return;
+    }
+
+    stays.slice().reverse().forEach(stay => {
+      const card = document.createElement("div");
+      card.style.cssText = "background:white;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ddd;";
+      card.innerHTML = `
+        <b>Room ${escapeHtml(stay.room)} — ${escapeHtml(stay.customer)}</b>
+        <p>Check-in: ${escapeHtml(stay.checkIn.replace("T", " "))}</p>
+        <p>Check-out: ${escapeHtml(stay.checkOut.replace("T", " "))}</p>
+        <p>Total: ${money(stay.total)} | Paid: ${money(stay.paid)} | Due: ${money(stay.due)}</p>
+        <p>Status: <b>${escapeHtml(stay.status)}</b></p>
+      `;
+      const button = document.createElement("button");
+      button.textContent = "View Bill";
+      button.style.cssText = "padding:8px 12px;background:#183153;color:white;border:0;border-radius:6px;";
+      button.onclick = () => {
+        window.hkCurrentBillId = stay.id;
+        showBill(stay);
+        document.getElementById("hkBillPreview").scrollIntoView({ behavior: "smooth" });
+      };
+      card.appendChild(button);
+      document.getElementById("hkStayList").appendChild(card);
+    });
+  }
+
+  render();
+})();
+</script>
+
 </body>
     
 <!-- Hotel Krishnam Payment Panel -->
