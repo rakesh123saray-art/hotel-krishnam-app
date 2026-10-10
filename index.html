@@ -1896,6 +1896,142 @@ renderBookings();
 })();
 </script>
 
+    
+<!-- Hotel Krishnam: Backup and Restore -->
+<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;margin:15px 0;border-radius:12px;">
+  <h2 style="text-align:center;color:#183153;">Hotel Krishnam</h2>
+  <h3>Backup & Restore Data</h3>
+
+  <p>अपने मोबाइल में होटल ऐप का सेव किया हुआ डेटा बैकअप के रूप में सुरक्षित रखें।</p>
+
+  <button type="button" onclick="hkCreateBackup()"
+    style="width:100%;padding:12px;background:#198754;color:white;border:0;border-radius:7px;margin:5px 0;">
+    Download Backup
+  </button>
+
+  <hr style="margin:18px 0;">
+
+  <label for="hkBackupFile"><b>Select Backup File to Restore</b></label>
+  <input id="hkBackupFile" type="file" accept=".json,application/json"
+    style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0;">
+
+  <button type="button" onclick="hkRestoreBackup()"
+    style="width:100%;padding:12px;background:#183153;color:white;border:0;border-radius:7px;margin:5px 0;">
+    Restore Backup
+  </button>
+
+  <p style="font-size:12px;color:#555;">
+    Restore करने से पहले वर्तमान डेटा का नया बैकअप बना लें। बैकअप फ़ाइल सुरक्षित रखें।
+  </p>
+  <div id="hkBackupMessage" role="status" style="margin-top:10px;"></div>
+</section>
+
+<script>
+window.hkCreateBackup = function () {
+  try {
+    const data = {};
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      data[key] = localStorage.getItem(key);
+    }
+
+    const backup = {
+      app: "Hotel Krishnam",
+      formatVersion: 1,
+      createdAt: new Date().toISOString(),
+      data: data
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(backup, null, 2)],
+      { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Hotel-Krishnam-Backup-" +
+      new Date().toISOString().slice(0, 10) + ".json";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+
+    document.getElementById("hkBackupMessage").textContent =
+      "Backup download started. Check your Downloads folder.";
+  } catch (error) {
+    document.getElementById("hkBackupMessage").textContent =
+      "Backup failed. Please try again.";
+  }
+};
+
+window.hkRestoreBackup = function () {
+  const fileInput = document.getElementById("hkBackupFile");
+  const message = document.getElementById("hkBackupMessage");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    message.textContent = "Please select a backup JSON file first.";
+    return;
+  }
+
+  if (!confirm(
+    "Restore this backup? Keys included in the file will replace their current values. Make a fresh backup first."
+  )) {
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    try {
+      const backup = JSON.parse(reader.result);
+
+      if (
+        !backup ||
+        backup.app !== "Hotel Krishnam" ||
+        backup.formatVersion !== 1 ||
+        !backup.data ||
+        typeof backup.data !== "object" ||
+        Array.isArray(backup.data)
+      ) {
+        throw new Error("Invalid backup format");
+      }
+
+      const entries = Object.entries(backup.data);
+
+      if (!entries.every(([key, value]) =>
+        typeof key === "string" && typeof value === "string"
+      )) {
+        throw new Error("Invalid backup data");
+      }
+
+      entries.forEach(([key, value]) => {
+        localStorage.setItem(key, value);
+      });
+
+      message.textContent =
+        "Backup restored successfully. Refresh the page to reload the app data.";
+
+      if (confirm("Backup restored. Refresh the page now?")) {
+        location.reload();
+      }
+    } catch (error) {
+      message.textContent =
+        "Restore failed. Please select a valid Hotel Krishnam backup file.";
+    }
+  };
+
+  reader.onerror = function () {
+    message.textContent = "Could not read the selected file.";
+  };
+
+  reader.readAsText(file);
+};
+</script>
+
 </body>
     
 <!-- Hotel Krishnam Payment Panel -->
