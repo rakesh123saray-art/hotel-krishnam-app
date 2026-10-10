@@ -1182,6 +1182,103 @@ renderRooms();
 renderBookings();
 
 </script>
+    
+<!-- Hotel Krishnam Room Status System -->
+<div id="roomStatusPanel" style="padding:16px;margin:15px 0;border-radius:12px;background:#f4f6f8;font-family:Arial,sans-serif;">
+  <h2 style="text-align:center;color:#183153;">Hotel Krishnam - Room Status</h2>
+
+  <div id="roomStatusSummary" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;"></div>
+
+  <div id="roomStatusGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;"></div>
+
+  <p style="font-size:12px;color:#555;margin-top:12px;">
+    Room status is saved on this device. Set the status manually below.
+  </p>
+</div>
+
+<script>
+(function () {
+  const rooms = Array.from({ length: 10 }, (_, i) => 101 + i);
+  const storageKey = "hotelKrishnamRoomStatuses";
+
+  function loadStatuses() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveRoomStatus(room, status) {
+    const statuses = loadStatuses();
+    statuses[room] = status;
+    localStorage.setItem(storageKey, JSON.stringify(statuses));
+    renderRoomStatuses();
+  }
+
+  function renderRoomStatuses() {
+    const statuses = loadStatuses();
+    const grid = document.getElementById("roomStatusGrid");
+    const summary = document.getElementById("roomStatusSummary");
+
+    const counts = { Available: 0, Booked: 0, "Payment Due": 0 };
+
+    rooms.forEach(room => {
+      const status = statuses[room] || "Available";
+      if (counts[status] !== undefined) counts[status]++;
+    });
+
+    summary.innerHTML = `
+      <div style="flex:1;min-width:90px;background:#d8f3dc;padding:10px;border-radius:8px;text-align:center;">
+        <b>${counts.Available}</b><br>Available
+      </div>
+      <div style="flex:1;min-width:90px;background:#f8d7da;padding:10px;border-radius:8px;text-align:center;">
+        <b>${counts.Booked}</b><br>Booked
+      </div>
+      <div style="flex:1;min-width:90px;background:#ffe5b4;padding:10px;border-radius:8px;text-align:center;">
+        <b>${counts["Payment Due"]}</b><br>Payment Due
+      </div>
+    `;
+
+    grid.innerHTML = "";
+
+    rooms.forEach(room => {
+      const status = statuses[room] || "Available";
+      const colors = {
+        "Available": "#d8f3dc",
+        "Booked": "#f8d7da",
+        "Payment Due": "#ffe5b4"
+      };
+
+      const card = document.createElement("div");
+      card.style.cssText = `background:${colors[status]};padding:12px;border-radius:10px;text-align:center;`;
+
+      const title = document.createElement("h3");
+      title.textContent = "Room " + room;
+      title.style.margin = "4px 0 10px";
+
+      const select = document.createElement("select");
+      select.style.cssText = "width:100%;padding:8px;border-radius:6px;";
+      ["Available", "Booked", "Payment Due"].forEach(optionText => {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        option.selected = optionText === status;
+        select.appendChild(option);
+      });
+
+      select.addEventListener("change", () => saveRoomStatus(room, select.value));
+
+      card.appendChild(title);
+      card.appendChild(select);
+      grid.appendChild(card);
+    });
+  }
+
+  renderRoomStatuses();
+})();
+</script>
+
 
 </body>
     
