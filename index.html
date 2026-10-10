@@ -1653,6 +1653,107 @@ renderBookings();
 })();
 </script>
 
+    
+<!-- Hotel Krishnam: Booking Search and Payment History -->
+<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:15px;margin:15px 0;border-radius:12px;">
+  <h2 style="color:#183153;">Search Booking & Payment History</h2>
+
+  <input id="hkSearchInput" placeholder="Customer name or room number"
+    style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0;">
+
+  <button type="button" onclick="hkSearchBookings()"
+    style="padding:10px 15px;background:#183153;color:white;border:0;border-radius:7px;">
+    Search
+  </button>
+
+  <div id="hkSearchResults" style="margin-top:15px;"></div>
+</section>
+
+<script>
+(function () {
+  function read(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || []; }
+    catch (e) { return []; }
+  }
+
+  function money(value) {
+    return "₹" + Number(value || 0).toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function safe(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  window.hkSearchBookings = function () {
+    const query = document.getElementById("hkSearchInput").value.trim().toLowerCase();
+    const results = document.getElementById("hkSearchResults");
+    const stays = read("hotelKrishnamStays");
+    const transactions = read("hotelKrishnamPaymentTransactions");
+
+    const matches = stays.filter(stay =>
+      String(stay.room).toLowerCase().includes(query) ||
+      String(stay.customer).toLowerCase().includes(query)
+    );
+
+    results.innerHTML = "";
+
+    if (!matches.length) {
+      results.textContent = "No matching booking found.";
+      return;
+    }
+
+    matches.slice().reverse().forEach(stay => {
+      const extraPaid = transactions
+        .filter(tx => String(tx.stayId) === String(stay.id))
+        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+      const paid = Number(stay.paid || 0) + extraPaid;
+      const due = Math.max(0, Number(stay.total) - paid);
+
+      const card = document.createElement("div");
+      card.style.cssText = "background:white;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px;";
+      card.innerHTML = `
+        <h3>Room ${safe(stay.room)} — ${safe(stay.customer)}</h3>
+        <p>Receipt ID: HK-${safe(stay.id)}</p>
+        <p>Check-in: ${safe(String(stay.checkIn || "").replace("T"," "))}</p>
+        <p>Check-out: ${safe(String(stay.checkOut || "").replace("T"," "))}</p>
+        <p>Total Bill: ${money(stay.total)}</p>
+        <p>Total Paid: ${money(paid)}</p>
+        <p>Balance Due: ${money(due)}</p>
+        <h4>Payment History</h4>
+      `;
+
+      const history = transactions.filter(tx => String(tx.stayId) === String(stay.id));
+      if (Number(stay.paid || 0) > 0) {
+        const first = document.createElement("p");
+        first.textContent = "Initial payment: " + money(stay.paid);
+        card.appendChild(first);
+      }
+
+      if (!history.length && Number(stay.paid || 0) <= 0) {
+        const empty = document.createElement("p");
+        empty.textContent = "No payments recorded yet.";
+        card.appendChild(empty);
+      } else {
+        history.forEach(tx => {
+          const line = document.createElement("p");
+          line.textContent = new Date(tx.receivedAt).toLocaleString("en-IN") +
+            " — " + money(tx.amount);
+          card.appendChild(line);
+        });
+      }
+
+      results.appendChild(card);
+    });
+  };
+})();
+</script>
+
 </body>
     
 <!-- Hotel Krishnam Payment Panel -->
