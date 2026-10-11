@@ -2242,6 +2242,41 @@ function hkRefreshRoomStatus() {
 document.addEventListener("DOMContentLoaded", hkRefreshRoomStatus);
 </script>
 
+<script>
+(function () {
+  const totalInput = document.getElementById("hkTotalAmount");
+  const paidInput = document.getElementById("hkPaidAmount");
+  const balanceInput = document.getElementById("hkBalanceAmount");
+
+  if (!totalInput || !paidInput || !balanceInput) {
+    return;
+  }
+
+  function updateBalance() {
+    const total = Number(totalInput.value);
+    const paid = Number(paidInput.value);
+
+    const balance = total - paid;
+
+    balanceInput.value =
+      totalInput.value === "" || paidInput.value === ""
+        ? ""
+        : Math.max(0, balance).toFixed(2);
+
+    if (paid > total) {
+      balanceInput.setCustomValidity(
+        "Paid amount cannot be greater than total rent."
+      );
+    } else {
+      balanceInput.setCustomValidity("");
+    }
+  }
+
+  totalInput.addEventListener("input", updateBalance);
+  paidInput.addEventListener("input", updateBalance);
+})();
+</script>
+
 </body>
     
 <!-- Hotel Krishnam Payment Panel -->
