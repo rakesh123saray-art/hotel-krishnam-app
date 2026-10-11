@@ -2155,6 +2155,77 @@ window.hkRestoreBackup = function () {
 })();
 </script>
 
+<!-- HOTEL KRISHNAM AUTOMATIC ROOM STATUS -->
+<section id="hkAutoRoomStatus" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:18px;margin:20px 0;border-radius:12px;">
+  <h2 style="color:#183153;">🏨 Automatic Room Status</h2>
+  <p>Room 101 से 110 तक की वर्तमान स्थिति</p>
+
+  <button type="button" onclick="hkRefreshRoomStatus()" style="padding:12px 20px;background:#276678;color:white;border:0;border-radius:8px;cursor:pointer;">
+    🔄 Refresh Room Status
+  </button>
+
+  <div id="hkRoomStatusList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px;"></div>
+</section>
+
+<script>
+function hkRefreshRoomStatus() {
+  const container = document.getElementById("hkRoomStatusList");
+  if (!container) return;
+
+  let stays = [];
+  try {
+    stays = JSON.parse(localStorage.getItem("hotelKrishnamStays") || "[]");
+    if (!Array.isArray(stays)) stays = [];
+  } catch (e) {
+    stays = [];
+  }
+
+  const now = new Date();
+
+  container.innerHTML = "";
+
+  for (let room = 101; room <= 110; room++) {
+    const activeStay = stays.find(stay => {
+      if (String(stay.room) !== String(room)) return false;
+      if (String(stay.status || "").toLowerCase() === "cancelled") return false;
+
+      const checkIn = new Date(stay.checkIn);
+      const checkOut = new Date(stay.checkOut);
+
+      return !isNaN(checkIn.getTime()) &&
+             !isNaN(checkOut.getTime()) &&
+             now >= checkIn &&
+             now < checkOut;
+    });
+
+    let status = "Available";
+    let color = "#198754";
+
+    if (activeStay) {
+      const due = Number(activeStay.due || 0);
+      status = due > 0 ? "Payment Due" : "Booked";
+      color = due > 0 ? "#dc3545" : "#276678";
+    }
+
+    const card = document.createElement("div");
+    card.style.cssText = "background:white;padding:16px;border-radius:10px;border-left:5px solid " + color + ";box-shadow:0 2px 6px #0001;";
+
+    const roomTitle = document.createElement("h3");
+    roomTitle.textContent = "Room " + room;
+
+    const statusText = document.createElement("strong");
+    statusText.style.color = color;
+    statusText.textContent = status;
+
+    card.appendChild(roomTitle);
+    card.appendChild(statusText);
+    container.appendChild(card);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", hkRefreshRoomStatus);
+</script>
+
 </body>
     
 <!-- Hotel Krishnam Payment Panel -->
