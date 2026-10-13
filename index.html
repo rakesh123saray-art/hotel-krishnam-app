@@ -1407,6 +1407,34 @@ renderBookings();
     alert("Stay and bill saved on this device.");
   };
 
+    
+function hkUpdateBalance() {
+  const total = Number(
+    document.getElementById("hkTotal").value || 0
+  );
+
+  const paid = Number(
+    document.getElementById("hkPaid").value || 0
+  );
+
+  const balance = total - paid;
+
+  const balanceBox =
+    document.getElementById("hkBalanceAmount");
+
+  if (balanceBox) {
+    balanceBox.value = Math.max(0, balance).toFixed(2);
+  }
+}
+
+document.getElementById("hkTotal")
+  .addEventListener("input", hkUpdateBalance);
+
+document.getElementById("hkPaid")
+  .addEventListener("input", hkUpdateBalance);
+
+hkUpdateBalance();
+
   function showBill(stay) {
     document.getElementById("hkBillPreview").innerHTML = `
       <h3 style="text-align:center;">HOTEL KRISHNAM</h3>
