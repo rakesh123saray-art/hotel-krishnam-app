@@ -500,57 +500,63 @@ document.getElementById("stayForm").addEventListener("submit", function(event) {
   showMessage("formMessage","Booking सफलतापूर्वक सेव हो गई।");
 });
 
+
 function renderRooms() {
   const grid = document.getElementById("roomGrid");
+
+  if (!grid) {
+    console.error("roomGrid नहीं मिला");
+    return;
+  }
+
   grid.innerHTML = "";
 
-  let available=0,occupied=0,due=0,cleaning=0;
+  let available = 0;
+  let occupied = 0;
+  let due = 0;
+  let cleaning = 0;
 
-  ROOM_NUMBERS.forEach(room => {
+  for (let i = 101; i <= 110; i++) {
+    const room = String(i);
     const status = currentRoomStatus(room);
+
     if (status === "Available") available++;
     if (status === "Occupied") occupied++;
     if (status === "Payment Due") due++;
     if (status === "Cleaning") cleaning++;
 
     const card = document.createElement("div");
-    card.className = "room-card " + status.replace(/\s/g,"-");
+    card.className = "room-card " + status.replace(/\s/g, "-");
 
     const title = document.createElement("h3");
     title.textContent = "Room " + room;
+
     const statusText = document.createElement("p");
     statusText.textContent = status;
 
     const select = document.createElement("select");
-    ["Available","Cleaning"].forEach(optionText => {
+
+    ["Available", "Cleaning"].forEach(value => {
       const option = document.createElement("option");
-      option.value = optionText;
-      option.textContent = "Set " + optionText;
-      option.selected = status === optionText;
+      option.value = value;
+      option.textContent = "Set " + value;
+      option.selected = status === value;
       select.appendChild(option);
     });
-    select.addEventListener("change", () => {
-      const active = db.stays.find(s =>
-        String(s.room) === room && !isCancelled(s) &&
-        s.status !== "Checked-Out" &&
-        validDate(s.checkIn) <= Date.now() &&
-        Date.now() < validDate(s.checkOut)
-      );
-      if (active) {
-        alert("यह कमरा अभी बुक/ऑक्युपाइड है। पहले Check-out करें।");
-        renderRooms();
-        return;
-      }
+
+    select.addEventListener("change", function() {
       db.roomOverrides[room] = select.value;
       saveDB();
       renderAll();
     });
 
-    card.append(title,statusText,select);
+    card.appendChild(title);
+    card.appendChild(statusText);
+    card.appendChild(select);
     grid.appendChild(card);
-  });
+  }
 
-  document.getElementById("totalRooms").textContent = ROOM_NUMBERS.length;
+  document.getElementById("totalRooms").textContent = 10;
   document.getElementById("availableRooms").textContent = available;
   document.getElementById("occupiedRooms").textContent = occupied;
   document.getElementById("dueRooms").textContent = due;
