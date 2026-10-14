@@ -1454,63 +1454,108 @@ hkUpdateBalance();
     `;
   }
 
-  window.hkPrintBill = function () {
-    const preview = document.getElementById("hkBillPreview");
-    if (!preview.innerText.trim()) {
-      alert("Please save a stay first to create a bill.");
-      return;
-    }
+ 
+window.hkPrintBill = function () {
+  const preview = document.getElementById("hkBillPreview");
 
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      alert("Allow pop-ups in your browser to print the bill.");
-      return;
-    }
-
-    printWindow.document.write(`
-      <!doctype html><html><head><title>Hotel Krishnam Bill</title>
-      <style>body{font-family:Arial,sans-serif;padding:25px;max-width:600px;margin:auto}
-      hr{border:0;border-top:1px solid #aaa}</style></head>
-      <body>${preview.innerHTML}<script>window.onload=function(){window.print();};<\/script></body></html>
-    `);
-    printWindow.document.close();
-  };
-
-  function render() {
-    const stays = getStays();
-    document.getElementById("hkStayList").innerHTML = "";
-
-    if (!stays.length) {
-      document.getElementById("hkStayList").textContent = "No stays saved yet.";
-      return;
-    }
-
-    stays.slice().reverse().forEach(stay => {
-      const card = document.createElement("div");
-      card.style.cssText = "background:white;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ddd;";
-      card.innerHTML = `
-        <b>Room ${escapeHtml(stay.room)} — ${escapeHtml(stay.customer)}</b>
-        <p>Check-in: ${escapeHtml(stay.checkIn.replace("T", " "))}</p>
-        <p>Check-out: ${escapeHtml(stay.checkOut.replace("T", " "))}</p>
-        <p>Total: ${money(stay.total)} | Paid: ${money(stay.paid)} | Due: ${money(stay.due)}</p>
-        <p>Status: <b>${escapeHtml(stay.status)}</b></p>
-      `;
-      const button = document.createElement("button");
-      button.textContent = "View Bill";
-      button.style.cssText = "padding:8px 12px;background:#183153;color:white;border:0;border-radius:6px;";
-      button.onclick = () => {
-        window.hkCurrentBillId = stay.id;
-        showBill(stay);
-        document.getElementById("hkBillPreview").scrollIntoView({ behavior: "smooth" });
-      };
-      card.appendChild(button);
-      document.getElementById("hkStayList").appendChild(card);
-    });
+  if (!preview || !preview.innerText.trim()) {
+    alert("Please save or view a bill first.");
+    return;
   }
 
-  render();
-})();
-</script>
+  const printWindow = window.open("", "_blank");
+
+  if (!printWindow) {
+    alert("Please allow pop-ups to print the bill.");
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Hotel Krishnam - Bill</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 25px;
+          max-width: 650px;
+          margin: auto;
+          color: #222;
+        }
+
+        h1 {
+          text-align: center;
+          color: #183153;
+          margin-bottom: 5px;
+        }
+
+        .subtitle {
+          text-align: center;
+          font-size: 14px;
+        }
+
+        .bill {
+          border: 2px solid #183153;
+          border-radius: 10px;
+          padding: 20px;
+          margin-top: 20px;
+        }
+
+        hr {
+          border: 0;
+          border-top: 1px solid #aaa;
+          margin: 15px 0;
+        }
+
+        .footer {
+          text-align: center;
+          margin-top: 30px;
+          font-size: 13px;
+        }
+
+        @media print {
+          body {
+            padding: 0;
+          }
+        }
+      </style>
+    </head>
+
+    <body>
+      <h1>HOTEL KRISHNAM</h1>
+
+      <div class="subtitle">
+        Contact: 9630918592 / 8823888592
+      </div>
+
+      <hr>
+
+      <h3 style="text-align:center">
+        CUSTOMER BILL / RECEIPT
+      </h3>
+
+      <div class="bill">
+        ${preview.innerHTML}
+      </div>
+
+      <div class="footer">
+        Thank you for staying with us!
+        <br>
+        Visit Again - Hotel Krishnam
+      </div>
+
+      <script>
+        window.onload = function() {
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+};
 
     
 
