@@ -1,2523 +1,948 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hotel Krishnam - Hotel Management</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotel Krishnam Management</title>
 <style>
 *{box-sizing:border-box}
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#eef3f8;
-    color:#333;
-}
-
-header{
-    background:#d90000;
-    color:white;
-    text-align:center;
-    padding:20px 10px;
-}
-
+body{margin:0;font-family:Arial,sans-serif;background:#eef3f8;color:#243044}
+header{background:#183153;color:white;padding:22px 12px;text-align:center}
 header h1{margin:0;font-size:28px}
-header p{margin:5px 0 0}
-
-.container{
-    width:95%;
-    max-width:1100px;
-    margin:20px auto;
-}
-
-.section{
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 2px 10px #bbb;
-}
-
-.section h2{
-    color:#a51f2d;
-    margin-top:0;
-}
-
-.dashboard{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-}
-
-.stat{
-    background:#edf4ff;
-    padding:18px;
-    text-align:center;
-    border-radius:10px;
-}
-
-.stat strong{
-    display:block;
-    font-size:24px;
-    margin-bottom:5px;
-}
-
-.room-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-}
-
-.room{
-    padding:14px 5px;
-    color:white;
-    text-align:center;
-    border-radius:8px;
-    font-weight:bold;
-}
-
-.available{background:#10a651}
-.booked{background:#e0a000}
-.occupied{background:#d90000}
-.cleaning{background:#7b4bb7}
-
-label{
-    display:block;
-    font-weight:bold;
-    margin-top:10px;
-}
-
-input,select{
-    width:100%;
-    padding:11px;
-    margin-top:5px;
-    border:1px solid #bbb;
-    border-radius:6px;
-    font-size:15px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-}
-
-button{
-    border:0;
-    padding:10px 14px;
-    border-radius:6px;
-    color:white;
-    cursor:pointer;
-    font-size:14px;
-    margin:4px;
-}
-
-.save-btn{background:#168a43}
-.view-btn{background:#168de2}
-.checkin-btn{background:#d98d00}
-.checkout-btn{background:#dc3045}
-.bill-btn{background:#673ab7}
-.delete-btn{background:#d0008b}
-.clean-btn{background:#7b4bb7}
-.available-btn{background:#168a43}
-.close-btn{background:#555}
-.print-btn{background:#168a43}
-
-.booking{
-    border-left:6px solid #168de2;
-    background:#f9fbfd;
-    padding:15px;
-    margin:15px 0;
-    border-radius:8px;
-}
-
-.booking h3{
-    color:#a51f2d;
-    margin-top:0;
-}
-
-.status{
-    display:inline-block;
-    padding:5px 10px;
-    border-radius:15px;
-    color:white;
-    background:#10a651;
-}
-
-.customer-box{
-    background:#f3f7fb;
-    padding:15px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
-.bill{
-    background:white;
-    padding:25px;
-    max-width:700px;
-    margin:auto;
-    border:1px solid #ddd;
-}
-
-.bill-header{
-    text-align:center;
-    border-bottom:2px solid #333;
-    padding-bottom:15px;
-}
-
-.bill-header h1{
-    margin:0;
-    color:#d00000;
-}
-
-.bill-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-.bill-table td{
-    border:1px solid #bbb;
-    padding:10px;
-}
-
-.bill-total td{
-    font-size:18px;
-    background:#f1f1f1;
-}
-
-.footer{
-    text-align:center;
-    padding:20px;
-    color:#777;
-}
-
+header p{margin:6px 0 0}
+.container{max-width:1150px;width:95%;margin:20px auto}
+.section{background:#fff;padding:18px;margin-bottom:18px;border-radius:12px;box-shadow:0 2px 8px #0001}
+h2{color:#183153;margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:#edf4ff;padding:15px;border-radius:10px;text-align:center}
+.stat strong{display:block;font-size:24px;margin-bottom:5px}
+label{display:block;font-weight:bold;margin-top:10px}
+input,select{width:100%;padding:11px;margin-top:5px;border:1px solid #cbd5e1;border-radius:7px;font-size:15px;background:white}
+button{border:0;border-radius:7px;padding:11px 14px;margin:4px 3px 4px 0;color:white;cursor:pointer;font-size:14px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:#183153}.green{background:#198754}.blue{background:#168de2}
+.orange{background:#b77905}.red{background:#d93045}.purple{background:#7040b5}
+.grey{background:#596579}
+.room-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.room-card{padding:12px;border-radius:9px;text-align:center;background:#f8fafc;border-left:5px solid #198754}
+.room-card h3{margin:3px 0 8px}
+.room-card p{margin:5px 0;font-weight:bold}
+.room-card select{font-size:13px;padding:7px}
+.Available{border-color:#198754}
+.Booked{border-color:#d99a00}
+.Occupied{border-color:#d93045}
+.Cleaning{border-color:#7040b5}
+.Payment-Due{border-color:#d97706}
+.booking-card{border:1px solid #dbe2ea;border-left:5px solid #168de2;background:#fbfdff;padding:14px;border-radius:9px;margin:12px 0}
+.booking-card h3{margin-top:0;color:#183153}
+.muted{color:#64748b;font-size:13px}
+.notice{padding:11px;border-radius:7px;background:#edf4ff;margin-top:10px;white-space:pre-wrap}
+.danger-notice{background:#fff1f2;color:#9f1239}
+.footer{text-align:center;color:#64748b;padding:20px}
+.hidden{display:none!important}
 @media(max-width:700px){
-
-    .dashboard{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .room-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
+ .dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid{grid-template-columns:1fr}
 }
-
 @media print{
-
-    body *{visibility:hidden}
-
-    #printArea,
-    #printArea *{
-        visibility:visible;
-    }
-
-    #printArea{
-        position:absolute;
-        left:0;
-        top:0;
-        width:100%;
-        border:0;
-    }
-
-    .no-print{
-        display:none!important;
-    }
+ body *{visibility:hidden!important}
+ #printArea,#printArea *{visibility:visible!important}
+ #printArea{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0}
+ .no-print{display:none!important}
 }
 </style>
 </head>
-
 <body>
-
 <header>
-<h1>Hotel Krishnam</h1>
-<p>Hotel Management System</p>
+  <h1>HOTEL KRISHNAM</h1>
+  <p>Hotel Management System</p>
 </header>
 
-<div class="container">
+<main class="container">
+  <section class="section">
+    <h2>📊 Dashboard</h2>
+    <div class="dashboard">
+      <div class="stat"><strong id="totalRooms">10</strong>Total Rooms</div>
+      <div class="stat"><strong id="availableRooms">10</strong>Available</div>
+      <div class="stat"><strong id="occupiedRooms">0</strong>Occupied</div>
+      <div class="stat"><strong id="dueRooms">0</strong>Payment Due Rooms</div>
+      <div class="stat"><strong id="totalStays">0</strong>Total Stays</div>
+      <div class="stat"><strong id="totalCollected">₹0</strong>Payment Received</div>
+      <div class="stat"><strong id="totalOutstanding">₹0</strong>Balance Due</div>
+      <div class="stat"><strong id="cleaningRooms">0</strong>Cleaning</div>
+    </div>
+  </section>
 
-<!-- DASHBOARD -->
-<div class="section">
-<h2>📊 Room Dashboard</h2>
+  <section class="section">
+    <h2>🏨 Room Status — 101 to 110</h2>
+    <p class="muted">रूम की स्थिति सेव की गई बुकिंग और पेमेंट के आधार पर दिखाई जाएगी।</p>
+    <div id="roomGrid" class="room-grid"></div>
+  </section>
 
-<div class="dashboard">
+  <section class="section" id="bookingSection">
+    <h2>➕ New Booking / Check-in</h2>
+    <form id="stayForm">
+      <div class="grid">
+        <div>
+          <label for="customer">Customer Name *</label>
+          <input id="customer" required maxlength="100">
+        </div>
+        <div>
+          <label for="mobile">Mobile Number</label>
+          <input id="mobile" type="tel" maxlength="20">
+        </div>
+        <div>
+          <label for="address">Customer Address</label>
+          <input id="address" maxlength="250">
+        </div>
+        <div>
+          <label for="room">Room Number *</label>
+          <select id="room" required></select>
+        </div>
+        <div>
+          <label for="checkIn">Check-in Date & Time *</label>
+          <input id="checkIn" type="datetime-local" required>
+        </div>
+        <div>
+          <label for="checkOut">Check-out Date & Time *</label>
+          <input id="checkOut" type="datetime-local" required>
+        </div>
+        <div>
+          <label for="total">Total Room Rent (₹) *</label>
+          <input id="total" type="number" min="0" step="0.01" required>
+        </div>
+        <div>
+          <label for="paid">Advance / Amount Received (₹)</label>
+          <input id="paid" type="number" min="0" step="0.01" value="0">
+        </div>
+        <div>
+          <label for="balance">Balance Amount (₹)</label>
+          <input id="balance" readonly value="0.00">
+        </div>
+      </div>
+      <p id="formMessage" class="notice hidden"></p>
+      <button class="green" type="submit" id="saveStayButton">💾 Save Booking</button>
+      <button class="grey" type="button" onclick="resetForm()">Clear Form</button>
+    </form>
+  </section>
 
-<div class="stat">
-<strong id="totalRooms">10</strong>
-Total Rooms
-</div>
+  <section class="section">
+    <h2>📋 Booking List / Customer Search</h2>
+    <input id="search" placeholder="Search name, mobile or room number...">
+    <div id="bookingList"></div>
+  </section>
 
-<div class="stat">
-<strong id="availableRooms">10</strong>
-Available
-</div>
+  <section class="section" id="paymentSection">
+    <h2>💰 Update Customer Payment</h2>
+    <label for="paymentStay">Select Booking</label>
+    <select id="paymentStay"></select>
+    <label for="paymentAmount">Additional Payment Received (₹)</label>
+    <input id="paymentAmount" type="number" min="0.01" step="0.01" placeholder="Enter payment amount">
+    <button class="green" type="button" onclick="addPayment()">Save Payment</button>
+    <div id="paymentMessage" class="notice hidden"></div>
+    <h3>Payment History</h3>
+    <div id="paymentHistory"></div>
+  </section>
 
-<div class="stat">
-<strong id="bookedRooms">0</strong>
-Booked
-</div>
+  <section class="section">
+    <h2>🧾 Customer Bill</h2>
+    <div id="billPreview">बुकिंग सूची में Bill बटन दबाकर बिल देखें।</div>
+  </section>
 
-<div class="stat">
-<strong id="cleaningRooms">0</strong>
-Cleaning
-</div>
+  <section class="section" id="reportSection">
+    <h2>📊 Daily Report</h2>
+    <label for="reportDate">Report Date</label>
+    <input id="reportDate" type="date">
+    <button class="primary" type="button" onclick="generateReport()">Show Report</button>
+    <button class="green" type="button" onclick="printReport()">Print Report</button>
+    <div id="reportResult" class="notice">रिपोर्ट देखने के लिए तारीख चुनें।</div>
+  </section>
 
-</div>
-</div>
+  <section class="section" id="backupSection">
+    <h2>💾 Backup & Restore</h2>
+    <p>अपने होटल का डेटा समय-समय पर कंप्यूटर में डाउनलोड करके सुरक्षित रखें।</p>
+    <button class="green" type="button" onclick="downloadBackup()">Download Backup</button>
+    <label for="backupFile">Restore Backup File</label>
+    <input id="backupFile" type="file" accept=".json,application/json">
+    <button class="primary" type="button" onclick="restoreBackup()">Restore Backup</button>
+    <div id="backupMessage" class="notice hidden"></div>
+  </section>
+</main>
 
-
-<!-- ROOM MANAGEMENT -->
-<div class="section">
-
-<h2>🛏 Room Management</h2>
-
-<div id="roomGrid" class="room-grid"></div>
-
-</div>
-
-
-<!-- NEW BOOKING -->
-<div class="section">
-
-<h2>➕ New Booking</h2>
-
-<div class="form-grid">
-
-<div>
-<label>Customer Name</label>
-<input id="customerName" type="text">
-</div>
-
-<div>
-<label>Mobile Number</label>
-<input id="mobile" type="text">
-</div>
-
-<div>
-<label>Customer Address</label>
-<input id="address" type="text">
-</div>
-
-<div>
-<label>Select Room</label>
-<select id="roomNumber"></select>
-</div>
-
-<div>
-<label>Check-In Date</label>
-<input id="checkInDate" type="date">
-</div>
-
-<div>
-<label>Check-In Time</label>
-<input id="checkInTime" type="time">
-</div>
-
-<div>
-<label>Check-Out Date</label>
-<input id="checkOutDate" type="date">
-</div>
-
-<div>
-<label>Check-Out Time</label>
-<input id="checkOutTime" type="time">
-</div>
-
-<div>
-<label>Advance Amount</label>
-<input id="advance" type="number" value="0">
-</div>
-
-<div>
-<label>Total Amount</label>
-<input id="total" type="number" value="0">
-</div>
-
-</div>
-
-<button class="save-btn" onclick="saveBooking()">
-    
-<div class="form-group">
-  <label for="hkTotalAmount">Total Room Rent (₹)</label>
-  <input type="number" id="hkTotalAmount" min="0" step="0.01" placeholder="Total rent">
-</div>
-
-<div class="form-group">
-  <label for="hkPaidAmount">Paid Amount (₹)</label>
-  <input type="number" id="hkPaidAmount" min="0" step="0.01" placeholder="Amount received">
-</div>
-
-<div class="form-group">
-  <label for="hkBalanceAmount">Balance Amount (₹)</label>
-  <input type="number" id="hkBalanceAmount" readonly placeholder="Remaining amount">
-</div>
-
-💾 Save Booking
-</button>
-
-</div>
-
-
-<!-- CUSTOMER MANAGEMENT -->
-<div class="section">
-
-<h2>👤 Customer Management</h2>
-
-<input
-id="customerSearch"
-type="text"
-placeholder="Search customer name or mobile..."
-oninput="searchCustomer()">
-
-<div id="customerResults"></div>
-
-</div>
-
-
-<!-- BOOKING LIST -->
-<div class="section">
-
-<h2>📋 Booking List</h2>
-
-<div id="bookingList"></div>
-
-</div>
-
-
-<!-- BILLING -->
-<div class="section">
-
-<h2>🧾 Billing / Invoice</h2>
-
-<div id="billingInfo">
-<p>Select <b>🧾 Bill</b> from a booking to view the bill.</p>
-</div>
-
-</div>
-
-</div>
-
-<div class="footer">
-Hotel Krishnam © 2026
-</div>
-
+<div class="footer">Hotel Krishnam © 2026</div>
 
 <script>
-
-const defaultRooms=[
-
-{number:"101",type:"Non-AC",status:"Available"},
-{number:"102",type:"Non-AC",status:"Available"},
-{number:"201",type:"AC",status:"Available"},
-{number:"202",type:"AC",status:"Available"},
-{number:"203",type:"AC",status:"Available"},
-
-{number:"204",type:"AC",status:"Available"},
-{number:"301",type:"AC",status:"Available"},
-{number:"302",type:"AC",status:"Available"},
-{number:"303",type:"AC",status:"Available"},
-{number:"304",type:"AC",status:"Available"}
-
-];
-
-
-let rooms=
-JSON.parse(localStorage.getItem("hotelRooms"))||
-JSON.parse(JSON.stringify(defaultRooms));
-
-let bookings=
-JSON.parse(localStorage.getItem("hotelBookings"))||[];
-
-
-/* पुराने data में Cleaning status को भी support करें */
-
-rooms.forEach(room=>{
-
-if(!["Available","Booked","Occupied","Cleaning"]
-.includes(room.status)){
-
-room.status="Available";
-
-}
-
-});
-
-
-function saveData(){
-
-localStorage.setItem(
-"hotelRooms",
-JSON.stringify(rooms)
-);
-
-localStorage.setItem(
-"hotelBookings",
-JSON.stringify(bookings)
-);
-
-}
-
-
-function escapeHTML(value){
-
-return String(value??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-
-/* ROOMS */
-
-function renderRooms(){
-
-const grid=document.getElementById("roomGrid");
-
-const select=document.getElementById("roomNumber");
-
-grid.innerHTML="";
-select.innerHTML="";
-
-
-rooms.forEach(room=>{
-
-const div=document.createElement("div");
-
-div.className=
-"room "+
-room.status.toLowerCase();
-
-div.innerHTML=
-`
-Room ${room.number}<br>
-${room.type}<br>
-${room.status}
-`;
-
-grid.appendChild(div);
-
-
-/* केवल Available rooms booking में दिखें */
-
-if(room.status==="Available"){
-
-const option=document.createElement("option");
-
-option.value=room.number;
-
-option.textContent=
-`Room ${room.number} - ${room.type}`;
-
-select.appendChild(option);
-
-}
-
-});
-
-updateDashboard();
-
-}
-
-
-/* DASHBOARD */
-
-function updateDashboard(){
-
-const available=
-rooms.filter(r=>r.status==="Available").length;
-
-const booked=
-rooms.filter(r=>r.status==="Booked").length;
-
-const cleaning=
-rooms.filter(r=>r.status==="Cleaning").length;
-
-document.getElementById("totalRooms")
-.textContent=rooms.length;
-
-document.getElementById("availableRooms")
-.textContent=available;
-
-document.getElementById("bookedRooms")
-.textContent=booked;
-
-document.getElementById("cleaningRooms")
-.textContent=cleaning;
-
-}
-
-
-/* SAVE BOOKING */
-
-function saveBooking(){
-
-const customerName=
-document.getElementById("customerName").value.trim();
-
-const mobile=
-document.getElementById("mobile").value.trim();
-
-const address=
-document.getElementById("address").value.trim();
-
-const roomNumber=
-document.getElementById("roomNumber").value;
-
-const checkInDate=
-document.getElementById("checkInDate").value;
-
-const checkInTime=
-document.getElementById("checkInTime").value;
-
-const checkOutDate=
-document.getElementById("checkOutDate").value;
-
-const checkOutTime=
-document.getElementById("checkOutTime").value;
-
-const advance=
-Number(document.getElementById("advance").value)||0;
-
-const total=
-Number(document.getElementById("total").value)||0;
-
-
-if(!customerName){
-
-alert("Please enter Customer Name");
-return;
-
-}
-
-if(!roomNumber){
-
-alert("Please select a room");
-return;
-
-}
-
-
-bookings.push({
-
-customerName,
-mobile,
-address,
-roomNumber,
-checkInDate,
-checkInTime,
-checkOutDate,
-checkOutTime,
-advance,
-total,
-status:"Booked"
-
-});
-
-
-const room=
-rooms.find(r=>r.number===roomNumber);
-
-if(room){
-
-room.status="Booked";
-
-}
-
-
-saveData();
-
-renderRooms();
-
-renderBookings();
-
-
-document.getElementById("customerName").value="";
-document.getElementById("mobile").value="";
-document.getElementById("address").value="";
-document.getElementById("advance").value="0";
-document.getElementById("total").value="0";
-
-
-alert("Booking Saved Successfully!");
-
-}
-
-
-/* BOOKING LIST */
-
-function renderBookings(){
-
-const list=document.getElementById("bookingList");
-
-list.innerHTML="";
-
-
-if(bookings.length===0){
-
-list.innerHTML="<p>No booking found.</p>";
-
-return;
-
-}
-
-
-bookings.forEach((booking,index)=>{
-
-let buttons="";
-
-
-buttons+=`
-<button
-class="view-btn"
-onclick="viewBooking(${index})">
-👁 View
-</button>
-`;
-
-
-if(booking.status==="Booked"){
-
-buttons+=`
-<button
-class="checkin-btn"
-onclick="checkInBooking(${index})">
-🟢 Check-In
-</button>
-`;
-
-}
-
-
-if(booking.status==="Checked-In"){
-
-buttons+=`
-<button
-class="checkout-btn"
-onclick="checkOutBooking(${index})">
-🔴 Check-Out
-</button>
-`;
-
-}
-
-
-/* BILL BUTTON */
-
-buttons+=`
-<button
-class="bill-btn"
-onclick="createBill(${index})">
-🧾 Bill
-</button>
-`;
-
-
-/* DELETE */
-
-buttons+=`
-<button
-class="delete-btn"
-onclick="deleteBooking(${index})">
-🗑 Delete
-</button>
-`;
-
-
-list.innerHTML+=`
-
-<div class="booking">
-
-<h3>
-🛏 Room ${escapeHTML(booking.roomNumber)}
-</h3>
-
-<p>
-<b>Customer:</b>
-${escapeHTML(booking.customerName)}
-</p>
-
-<p>
-<b>Mobile:</b>
-${escapeHTML(booking.mobile)}
-</p>
-
-<p>
-<b>Address:</b>
-${escapeHTML(booking.address||"-")}
-</p>
-
-<p>
-<b>Check-In:</b>
-${escapeHTML(booking.checkInDate)}
-${escapeHTML(booking.checkInTime)}
-</p>
-
-<p>
-<b>Check-Out:</b>
-${escapeHTML(booking.checkOutDate)}
-${escapeHTML(booking.checkOutTime)}
-</p>
-
-<p>
-<b>Advance:</b>
-₹${Number(booking.advance)||0}
-</p>
-
-<p>
-<b>Total:</b>
-₹${Number(booking.total)||0}
-</p>
-
-<p>
-<b>Status:</b>
-<span class="status">
-${escapeHTML(booking.status)}
-</span>
-</p>
-
-<div>
-${buttons}
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-/* VIEW */
-
-function viewBooking(index){
-
-const b=bookings[index];
-
-alert(
-
-"Customer: "+b.customerName+
-"\nMobile: "+b.mobile+
-"\nAddress: "+(b.address||"-")+
-"\nRoom: "+b.roomNumber+
-"\nCheck-In: "+b.checkInDate+" "+b.checkInTime+
-"\nCheck-Out: "+b.checkOutDate+" "+b.checkOutTime+
-"\nAdvance: ₹"+(b.advance||0)+
-"\nTotal: ₹"+(b.total||0)+
-"\nStatus: "+b.status
-
-);
-
-}
-
-
-/* CHECK IN */
-
-function checkInBooking(index){
-
-const booking=bookings[index];
-
-booking.status="Checked-In";
-
-
-const room=
-rooms.find(r=>r.number===booking.roomNumber);
-
-if(room){
-
-room.status="Occupied";
-
-}
-
-
-saveData();
-
-renderRooms();
-
-renderBookings();
-
-}
-
-
-/* CHECK OUT → CLEANING */
-
-function checkOutBooking(index){
-
-const booking=bookings[index];
-
-booking.status="Checked-Out";
-
-
-const room=
-rooms.find(r=>r.number===booking.roomNumber);
-
-if(room){
-
-room.status="Cleaning";
-
-}
-
-
-saveData();
-
-renderRooms();
-
-renderBookings();
-
-
-alert(
-"Check-Out complete.\nRoom "+booking.roomNumber+
-" is now in Cleaning."
-);
-
-}
-
-
-/* MARK ROOM AVAILABLE */
-
-function markRoomAvailable(roomNumber){
-
-const room=
-rooms.find(r=>r.number===roomNumber);
-
-if(!room){
-
-return;
-
-}
-
-
-if(room.status!=="Cleaning"){
-
-return;
-
-}
-
-
-room.status="Available";
-
-
-saveData();
-
-renderRooms();
-
-renderBookings();
-
-
-alert(
-"Room "+roomNumber+
-" is now Available."
-);
-
-}
-
-
-/* DELETE */
-
-function deleteBooking(index){
-
-if(!confirm("Delete this booking?")){
-
-return;
-
-}
-
-
-const booking=bookings[index];
-
-const room=
-rooms.find(r=>r.number===booking.roomNumber);
-
+"use strict";
 
 /*
-अगर booking delete हो रही है और room Cleaning में है
-तो room को Available कर देंगे।
+  नई एकीकृत डेटा फ़ाइल:
+  पुराने localStorage keys को migration के लिए पढ़ा जाता है।
+  पुराने keys को migration के दौरान delete नहीं किया जाता।
 */
+const DB_KEY = "hotelKrishnamUnified_v2";
+const ROOM_NUMBERS = Array.from({length:10}, (_,i) => String(101+i));
 
-if(room){
-
-room.status="Available";
-
-}
-
-
-bookings.splice(index,1);
-
-saveData();
-
-renderRooms();
-
-renderBookings();
-
-}
-
-
-/* CUSTOMER SEARCH */
-
-function searchCustomer(){
-
-const search=
-document.getElementById("customerSearch")
-.value
-.toLowerCase()
-.trim();
-
-const result=
-document.getElementById("customerResults");
-
-result.innerHTML="";
-
-
-if(!search){
-
-return;
-
-}
-
-
-const found=
-bookings.filter(b=>
-
-String(b.customerName)
-.toLowerCase()
-.includes(search)
-
-||
-
-String(b.mobile)
-.toLowerCase()
-.includes(search)
-
-);
-
-
-if(found.length===0){
-
-result.innerHTML="<p>No customer found.</p>";
-
-return;
-
-}
-
-
-found.forEach(b=>{
-
-result.innerHTML+=`
-
-<div class="customer-box">
-
-<b>Name:</b>
-${escapeHTML(b.customerName)}
-<br>
-
-<b>Mobile:</b>
-${escapeHTML(b.mobile)}
-<br>
-
-<b>Address:</b>
-${escapeHTML(b.address||"-")}
-<br>
-
-<b>Room:</b>
-${escapeHTML(b.roomNumber)}
-<br>
-
-<b>Check-In:</b>
-${escapeHTML(b.checkInDate)}
-${escapeHTML(b.checkInTime)}
-<br>
-
-<b>Check-Out:</b>
-${escapeHTML(b.checkOutDate)}
-${escapeHTML(b.checkOutTime)}
-<br>
-
-<b>Status:</b>
-${escapeHTML(b.status)}
-
-</div>
-
-`;
-
-});
-
-}
-
-
-/* BILL */
-
-function createBill(index){
-
-const booking=bookings[index];
-
-if(!booking)return;
-
-
-const total=
-Number(booking.total)||0;
-
-const advance=
-Number(booking.advance)||0;
-
-const balance=
-Math.max(0,total-advance);
-
-
-const billHTML=`
-
-<div id="printArea" class="bill">
-
-<div class="bill-header">
-
-<h1>Hotel Krishnam</h1>
-
-<p><b>Hotel Management System</b></p>
-
-<p><b>INVOICE / BILL</b></p>
-
-</div>
-
-
-<table class="bill-table">
-
-<tr>
-<td><b>Customer Name</b></td>
-<td>${escapeHTML(booking.customerName)}</td>
-</tr>
-
-<tr>
-<td><b>Mobile</b></td>
-<td>${escapeHTML(booking.mobile)}</td>
-</tr>
-
-<tr>
-<td><b>Address</b></td>
-<td>${escapeHTML(booking.address||"-")}</td>
-</tr>
-
-<tr>
-<td><b>Room Number</b></td>
-<td>${escapeHTML(booking.roomNumber)}</td>
-</tr>
-
-<tr>
-<td><b>Check-In</b></td>
-<td>
-${escapeHTML(booking.checkInDate)}
-${escapeHTML(booking.checkInTime)}
-</td>
-</tr>
-
-<tr>
-<td><b>Check-Out</b></td>
-<td>
-${escapeHTML(booking.checkOutDate)}
-${escapeHTML(booking.checkOutTime)}
-</td>
-</tr>
-
-<tr>
-<td><b>Total Amount</b></td>
-<td>₹${total}</td>
-</tr>
-
-<tr>
-<td><b>Advance Paid</b></td>
-<td>₹${advance}</td>
-</tr>
-
-<tr class="bill-total">
-<td><b>Balance Due</b></td>
-<td><b>₹${balance}</b></td>
-</tr>
-
-</table>
-
-
-<p style="text-align:center;margin-top:25px">
-Thank you for staying at Hotel Krishnam.
-</p>
-
-
-<div
-class="no-print"
-style="text-align:center;margin-top:20px">
-
-<button
-class="print-btn"
-onclick="window.print()">
-🖨️ Print Bill
-</button>
-
-<button
-class="close-btn"
-onclick="closeBill()">
-✖ Close
-</button>
-
-</div>
-
-</div>
-
-`;
-
-
-document.getElementById("billingInfo")
-.innerHTML=billHTML;
-
-
-document.getElementById("billingInfo")
-.scrollIntoView({
-behavior:"smooth"
-});
-
-}
-
-
-function closeBill(){
-
-document.getElementById("billingInfo")
-.innerHTML=
-"<p>Select 🧾 Bill from a booking to view the bill.</p>";
-
-}
-
-
-/* INITIAL LOAD */
-
-renderRooms();
-
-renderBookings();
-
-</script>
-    
-<!-- Hotel Krishnam Room Status System -->
-<div id="roomStatusPanel" style="padding:16px;margin:15px 0;border-radius:12px;background:#f4f6f8;font-family:Arial,sans-serif;">
-  <h2 style="text-align:center;color:#183153;">Hotel Krishnam - Room Status</h2>
-
-  <div id="roomStatusSummary" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;"></div>
-
-  <div id="roomStatusGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;"></div>
-
-  <p style="font-size:12px;color:#555;margin-top:12px;">
-    Room status is saved on this device. Set the status manually below.
-  </p>
-</div>
-
-<script>
-(function () {
-  const rooms = Array.from({ length: 10 }, (_, i) => 101 + i);
-  const storageKey = "hotelKrishnamRoomStatuses";
-
-  function loadStatuses() {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey)) || {};
-    } catch (e) {
-      return {};
-    }
-  }
-
-  function saveRoomStatus(room, status) {
-    const statuses = loadStatuses();
-    statuses[room] = status;
-    localStorage.setItem(storageKey, JSON.stringify(statuses));
-    renderRoomStatuses();
-  }
-
-  function renderRoomStatuses() {
-    const statuses = loadStatuses();
-    const grid = document.getElementById("roomStatusGrid");
-    const summary = document.getElementById("roomStatusSummary");
-
-    const counts = { Available: 0, Booked: 0, "Payment Due": 0 };
-
-    rooms.forEach(room => {
-      const status = statuses[room] || "Available";
-      if (counts[status] !== undefined) counts[status]++;
-    });
-
-    summary.innerHTML = `
-      <div style="flex:1;min-width:90px;background:#d8f3dc;padding:10px;border-radius:8px;text-align:center;">
-        <b>${counts.Available}</b><br>Available
-      </div>
-      <div style="flex:1;min-width:90px;background:#f8d7da;padding:10px;border-radius:8px;text-align:center;">
-        <b>${counts.Booked}</b><br>Booked
-      </div>
-      <div style="flex:1;min-width:90px;background:#ffe5b4;padding:10px;border-radius:8px;text-align:center;">
-        <b>${counts["Payment Due"]}</b><br>Payment Due
-      </div>
-    `;
-
-    grid.innerHTML = "";
-
-    rooms.forEach(room => {
-      const status = statuses[room] || "Available";
-      const colors = {
-        "Available": "#d8f3dc",
-        "Booked": "#f8d7da",
-        "Payment Due": "#ffe5b4"
-      };
-
-      const card = document.createElement("div");
-      card.style.cssText = `background:${colors[status]};padding:12px;border-radius:10px;text-align:center;`;
-
-      const title = document.createElement("h3");
-      title.textContent = "Room " + room;
-      title.style.margin = "4px 0 10px";
-
-      const select = document.createElement("select");
-      select.style.cssText = "width:100%;padding:8px;border-radius:6px;";
-      ["Available", "Booked", "Payment Due"].forEach(optionText => {
-        const option = document.createElement("option");
-        option.value = optionText;
-        option.textContent = optionText;
-        option.selected = optionText === status;
-        select.appendChild(option);
-      });
-
-      select.addEventListener("change", () => saveRoomStatus(room, select.value));
-
-      card.appendChild(title);
-      card.appendChild(select);
-      grid.appendChild(card);
-    });
-  }
-
-  renderRoomStatuses();
-})();
-</script>
-
-
-<!-- Hotel Krishnam: Check-in, Check-out and Customer Bill -->
-<section id="hkStayBill" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;margin:15px 0;border-radius:12px;">
-  <h2 style="text-align:center;color:#183153;">Hotel Krishnam</h2>
-  <h3>Check-in / Check-out & Customer Bill</h3>
-
-  <label>Room Number</label>
-  <select id="hkRoom" style="width:100%;padding:10px;margin:5px 0 12px;">
-    <option value="">Select Room</option>
-  </select>
-
-  <label>Customer Name</label>
-  <input id="hkCustomer" placeholder="Enter customer name" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
-
-  <label>Check-in Date & Time</label>
-  <input id="hkIn" type="datetime-local" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
-
-  <label>Check-out Date & Time</label>
-  <input id="hkOut" type="datetime-local" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
-
-  <label>Total Bill (₹)</label>
-  <input id="hkTotal" type="number" min="0" placeholder="Enter total bill" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
-
-  <label>Payment Received (₹)</label>
-  <input id="hkPaid" type="number" min="0" placeholder="Enter amount received" style="box-sizing:border-box;width:100%;padding:10px;margin:5px 0 12px;">
-
-  <button type="button" onclick="hkSaveStay()" style="padding:11px 16px;background:#183153;color:white;border:0;border-radius:7px;">Save Stay & Bill</button>
-  <button type="button" onclick="hkPrintBill()" style="padding:11px 16px;background:#198754;color:white;border:0;border-radius:7px;margin-left:5px;">Print Bill</button>
-
-  <div id="hkBillPreview" style="background:white;padding:15px;margin-top:16px;border:1px solid #ddd;"></div>
-
-  <h3>Saved Stays</h3>
-  <div id="hkStayList"></div>
-</section>
-
-<script>
-(function () {
-  const key = "hotelKrishnamStays";
-  const roomSelect = document.getElementById("hkRoom");
-
-  for (let n = 101; n <= 110; n++) {
-    const option = document.createElement("option");
-    option.value = n;
-    option.textContent = "Room " + n;
-    roomSelect.appendChild(option);
-  }
-
-  function getStays() {
-    try {
-      return JSON.parse(localStorage.getItem(key)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function money(value) {
-    return "₹" + Number(value || 0).toLocaleString("en-IN");
-  }
-
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;",
-      '"': "&quot;", "'": "&#39;"
-    }[char]));
-  }
-
-  window.hkSaveStay = function () {
-    const room = document.getElementById("hkRoom").value;
-    const customer = document.getElementById("hkCustomer").value.trim();
-    const checkIn = document.getElementById("hkIn").value;
-    const checkOut = document.getElementById("hkOut").value;
-    const total = Number(document.getElementById("hkTotal").value);
-    const paid = Number(document.getElementById("hkPaid").value || 0);
-
-    if (!room || !customer || !checkIn || !checkOut ||
-        document.getElementById("hkTotal").value === "") {
-      alert("Please fill Room, Customer, Check-in, Check-out and Total Bill.");
-      return;
-    }
-
-    if (new Date(checkOut) <= new Date(checkIn)) {
-      alert("Check-out must be after Check-in.");
-      return;
-    }
-
-    if (total < 0 || paid < 0 || paid > total) {
-      alert("Payment must be between ₹0 and the total bill.");
-      return;
-    }
-
-    const stays = getStays();
-    const stay = {
-      id: Date.now(),
-      room,
-      customer,
-      checkIn,
-      checkOut,
-      total,
-      paid,
-      due: total - paid,
-      status: paid >= total ? "Paid" : "Payment Due"
-    };
-
-    stays.push(stay);
-    localStorage.setItem(key, JSON.stringify(stays));
-    window.hkCurrentBillId = stay.id;
-
-    render();
-    showBill(stay);
-    alert("Stay and bill saved on this device.");
-  };
-
-    
-function hkUpdateBalance() {
-  const total = Number(
-    document.getElementById("hkTotal").value || 0
-  );
-
-  const paid = Number(
-    document.getElementById("hkPaid").value || 0
-  );
-
-  const balance = total - paid;
-
-  const balanceBox =
-    document.getElementById("hkBalanceAmount");
-
-  if (balanceBox) {
-    balanceBox.value = Math.max(0, balance).toFixed(2);
-  }
-}
-
-document.getElementById("hkTotal")
-  .addEventListener("input", hkUpdateBalance);
-
-document.getElementById("hkPaid")
-  .addEventListener("input", hkUpdateBalance);
-
-hkUpdateBalance();
-
-  function showBill(stay) {
-    document.getElementById("hkBillPreview").innerHTML = `
-      <h3 style="text-align:center;">HOTEL KRISHNAM</h3>
-      <p style="text-align:center;">Customer Bill / Receipt</p>
-      <hr>
-      <p><b>Receipt:</b> HK-${stay.id}</p>
-      <p><b>Customer:</b> ${escapeHtml(stay.customer)}</p>
-      <p><b>Room:</b> ${escapeHtml(stay.room)}</p>
-      <p><b>Check-in:</b> ${escapeHtml(stay.checkIn.replace("T", " "))}</p>
-      <p><b>Check-out:</b> ${escapeHtml(stay.checkOut.replace("T", " "))}</p>
-      <hr>
-      <p>Total Bill: <b>${money(stay.total)}</b></p>
-      <p>Payment Received: <b>${money(stay.paid)}</b></p>
-      <p>Balance Due: <b>${money(stay.due)}</b></p>
-      <p><b>Payment Status:</b> ${escapeHtml(stay.status)}</p>
-      <p style="text-align:center;">Thank you for staying with Hotel Krishnam!</p>
-    `;
-  }
-
- 
-window.hkPrintBill = function () {
-  const preview = document.getElementById("hkBillPreview");
-
-  if (!preview || !preview.innerText.trim()) {
-    alert("Please save or view a bill first.");
-    return;
-  }
-
-  const printWindow = window.open("", "_blank");
-
-  if (!printWindow) {
-    alert("Please allow pop-ups to print the bill.");
-    return;
-  }
-
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Hotel Krishnam - Bill</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          padding: 25px;
-          max-width: 650px;
-          margin: auto;
-          color: #222;
-        }
-
-        h1 {
-          text-align: center;
-          color: #183153;
-          margin-bottom: 5px;
-        }
-
-        .subtitle {
-          text-align: center;
-          font-size: 14px;
-        }
-
-        .bill {
-          border: 2px solid #183153;
-          border-radius: 10px;
-          padding: 20px;
-          margin-top: 20px;
-        }
-
-        hr {
-          border: 0;
-          border-top: 1px solid #aaa;
-          margin: 15px 0;
-        }
-
-        .footer {
-          text-align: center;
-          margin-top: 30px;
-          font-size: 13px;
-        }
-
-        @media print {
-          body {
-            padding: 0;
-          }
-        }
-      </style>
-    </head>
-
-    <body>
-      <h1>HOTEL KRISHNAM</h1>
-
-      <div class="subtitle">
-        Contact: 9630918592 / 8823888592
-      </div>
-
-      <hr>
-
-      <h3 style="text-align:center">
-        CUSTOMER BILL / RECEIPT
-      </h3>
-
-      <div class="bill">
-        ${preview.innerHTML}
-      </div>
-
-      <div class="footer">
-        Thank you for staying with us!
-        <br>
-        Visit Again - Hotel Krishnam
-      </div>
-
-      <script>
-        window.onload = function() {
-          window.print();
-        };
-      <\/script>
-    </body>
-    </html>
-  `);
-
-  printWindow.document.close();
-};
-
-    
-
-<!-- Hotel Krishnam: Prevent Double Booking -->
-<script>
-(function () {
-  const stayKey = "hotelKrishnamStays";
-
-  function readStays() {
-    try {
-      return JSON.parse(localStorage.getItem(stayKey)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function overlaps(startA, endA, startB, endB) {
-    return startA < endB && startB < endA;
-  }
-
-  const originalSave = window.hkSaveStay;
-
-  if (typeof originalSave !== "function") {
-    console.warn("Stay form not found. Check that the Stay & Bill code is installed first.");
-    return;
-  }
-
-  window.hkSaveStay = function () {
-    const room = document.getElementById("hkRoom").value;
-    const checkInValue = document.getElementById("hkIn").value;
-    const checkOutValue = document.getElementById("hkOut").value;
-
-    if (!room || !checkInValue || !checkOutValue) {
-      originalSave();
-      return;
-    }
-
-    const newStart = new Date(checkInValue).getTime();
-    const newEnd = new Date(checkOutValue).getTime();
-
-    if (!Number.isFinite(newStart) || !Number.isFinite(newEnd) || newEnd <= newStart) {
-      alert("Please enter a valid Check-in and Check-out date/time.");
-      return;
-    }
-
-    const conflict = readStays().find(stay => {
-      if (Number(stay.room) !== Number(room)) return false;
-
-      const oldStart = new Date(stay.checkIn).getTime();
-      const oldEnd = new Date(stay.checkOut).getTime();
-
-      return Number.isFinite(oldStart) &&
-             Number.isFinite(oldEnd) &&
-             overlaps(newStart, newEnd, oldStart, oldEnd);
-    });
-
-    if (conflict) {
-      alert(
-        "Room " + room + " is already booked for some of this time. " +
-        "Please choose another room or a different time."
-      );
-      return;
-    }
-
-    originalSave();
-  };
-})();
-</script>
-
-    
-<!-- Hotel Krishnam: Update Customer Payment -->
-<section id="hkPaymentUpdate" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:15px;margin:15px 0;border-radius:12px;">
-  <h2 style="color:#183153;">Update Customer Payment</h2>
-
-  <label>Select Booking</label>
-  <select id="hkPayBooking" style="width:100%;padding:10px;margin:8px 0;"></select>
-
-  <label>Additional Payment Received (₹)</label>
-  <input id="hkPayAmount" type="number" min="1" step="0.01" placeholder="Enter amount received" style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0;">
-
-  <button type="button" onclick="hkAddPayment()" style="background:#198754;color:white;padding:11px 16px;border:0;border-radius:7px;">Update Payment</button>
-
-  <div id="hkPayMessage" style="margin-top:12px;"></div>
-</section>
-
-<script>
-(function () {
-  const stayKey = "hotelKrishnamStays";
-  const paymentKey = "hotelKrishnamPaymentTransactions";
-  const select = document.getElementById("hkPayBooking");
-  const message = document.getElementById("hkPayMessage");
-
-  function getStays() {
-    try {
-      return JSON.parse(localStorage.getItem(stayKey)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function getTransactions() {
-    try {
-      return JSON.parse(localStorage.getItem(paymentKey)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function paidFor(stay) {
-    const transactions = getTransactions()
-      .filter(tx => String(tx.stayId) === String(stay.id))
-      .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
-    return Number(stay.paid || 0) + transactions;
-  }
-
-  function refreshPaymentOptions() {
-    const stays = getStays();
-    select.innerHTML = "";
-
-    if (!stays.length) {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "No saved stays found";
-      select.appendChild(option);
-      return;
-    }
-
-    stays.forEach(stay => {
-      const paid = paidFor(stay);
-      const due = Math.max(0, Number(stay.total) - paid);
-      const option = document.createElement("option");
-      option.value = stay.id;
-      option.textContent =
-        "Room " + stay.room + " - " + stay.customer +
-        " | Due ₹" + due.toFixed(2);
-      select.appendChild(option);
-    });
-  }
-
-  window.hkAddPayment = function () {
-    const stays = getStays();
-    const stay = stays.find(item => String(item.id) === String(select.value));
-    const amount = Number(document.getElementById("hkPayAmount").value);
-
-    if (!stay) {
-      message.textContent = "No saved stay found.";
-      return;
-    }
-
-    const currentPaid = paidFor(stay);
-    const due = Number(stay.total) - currentPaid;
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      message.textContent = "Please enter a payment greater than ₹0.";
-      return;
-    }
-
-    if (amount > due) {
-      message.textContent = "Payment is greater than the remaining balance of ₹" + Math.max(0, due).toFixed(2);
-      return;
-    }
-
-    const transactions = getTransactions();
-    transactions.push({
-      stayId: stay.id,
-      amount: amount,
-      receivedAt: new Date().toISOString()
-    });
-
-    localStorage.setItem(paymentKey, JSON.stringify(transactions));
-    document.getElementById("hkPayAmount").value = "";
-
-    const newPaid = currentPaid + amount;
-    const newDue = Number(stay.total) - newPaid;
-
-    message.textContent =
-      "Payment saved. Total received: ₹" + newPaid.toFixed(2) +
-      " | Balance due: ₹" + newDue.toFixed(2);
-
-    refreshPaymentOptions();
-  };
-
-  refreshPaymentOptions();
-})();
-</script>
-
-    
-<!-- Hotel Krishnam: Booking Search and Payment History -->
-<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:15px;margin:15px 0;border-radius:12px;">
-  <h2 style="color:#183153;">Search Booking & Payment History</h2>
-
-  <input id="hkSearchInput" placeholder="Customer name or room number"
-    style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0;">
-
-  <button type="button" onclick="hkSearchBookings()"
-    style="padding:10px 15px;background:#183153;color:white;border:0;border-radius:7px;">
-    Search
-  </button>
-
-  <div id="hkSearchResults" style="margin-top:15px;"></div>
-</section>
-
-<script>
-(function () {
-  function read(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || []; }
-    catch (e) { return []; }
-  }
-
-  function money(value) {
-    return "₹" + Number(value || 0).toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-
-  function safe(value) {
-    return String(value ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[c]));
-  }
-
-  window.hkSearchBookings = function () {
-    const query = document.getElementById("hkSearchInput").value.trim().toLowerCase();
-    const results = document.getElementById("hkSearchResults");
-    const stays = read("hotelKrishnamStays");
-    const transactions = read("hotelKrishnamPaymentTransactions");
-
-    const matches = stays.filter(stay =>
-      String(stay.room).toLowerCase().includes(query) ||
-      String(stay.customer).toLowerCase().includes(query)
-    );
-
-    results.innerHTML = "";
-
-    if (!matches.length) {
-      results.textContent = "No matching booking found.";
-      return;
-    }
-
-    matches.slice().reverse().forEach(stay => {
-      const extraPaid = transactions
-        .filter(tx => String(tx.stayId) === String(stay.id))
-        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
-
-      const paid = Number(stay.paid || 0) + extraPaid;
-      const due = Math.max(0, Number(stay.total) - paid);
-
-      const card = document.createElement("div");
-      card.style.cssText = "background:white;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px;";
-      card.innerHTML = `
-        <h3>Room ${safe(stay.room)} — ${safe(stay.customer)}</h3>
-        <p>Receipt ID: HK-${safe(stay.id)}</p>
-        <p>Check-in: ${safe(String(stay.checkIn || "").replace("T"," "))}</p>
-        <p>Check-out: ${safe(String(stay.checkOut || "").replace("T"," "))}</p>
-        <p>Total Bill: ${money(stay.total)}</p>
-        <p>Total Paid: ${money(paid)}</p>
-        <p>Balance Due: ${money(due)}</p>
-        <h4>Payment History</h4>
-      `;
-
-      const history = transactions.filter(tx => String(tx.stayId) === String(stay.id));
-      if (Number(stay.paid || 0) > 0) {
-        const first = document.createElement("p");
-        first.textContent = "Initial payment: " + money(stay.paid);
-        card.appendChild(first);
-      }
-
-      if (!history.length && Number(stay.paid || 0) <= 0) {
-        const empty = document.createElement("p");
-        empty.textContent = "No payments recorded yet.";
-        card.appendChild(empty);
-      } else {
-        history.forEach(tx => {
-          const line = document.createElement("p");
-          line.textContent = new Date(tx.receivedAt).toLocaleString("en-IN") +
-            " — " + money(tx.amount);
-          card.appendChild(line);
-        });
-      }
-
-      results.appendChild(card);
-    });
-  };
-})();
-</script>
-
-    
-<!-- Hotel Krishnam: Daily Report -->
-<section id="hkDailyReport" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;margin:15px 0;border-radius:12px;">
-  <h2 style="text-align:center;color:#183153;">Hotel Krishnam - Daily Report</h2>
-
-  <label for="hkReportDate">Report Date</label>
-  <input id="hkReportDate" type="date" style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0 12px;">
-
-  <button type="button" onclick="hkGenerateDailyReport()" style="padding:10px 15px;background:#183153;color:white;border:0;border-radius:7px;">Show Report</button>
-  <button type="button" onclick="hkPrintDailyReport()" style="padding:10px 15px;background:#198754;color:white;border:0;border-radius:7px;margin-left:5px;">Print Report</button>
-
-  <div id="hkDailyReportResult" style="margin-top:15px;background:white;padding:14px;border-radius:8px;"></div>
-</section>
-
-<script>
-(function () {
-  const dateInput = document.getElementById("hkReportDate");
-  const result = document.getElementById("hkDailyReportResult");
-
-  function localDateString(date) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  }
-
-  function read(key) {
-    try {
-      return JSON.parse(localStorage.getItem(key)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function money(value) {
-    return "₹" + Number(value || 0).toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-
-  dateInput.value = localDateString(new Date());
-
-  window.hkGenerateDailyReport = function () {
-    const selectedDate = dateInput.value;
-
-    if (!selectedDate) {
-      result.textContent = "Please select a report date.";
-      return;
-    }
-
-    const stays = read("hotelKrishnamStays");
-    const transactions = read("hotelKrishnamPaymentTransactions");
-
-    // Bookings created today are not tracked separately by the current app.
-    // This report counts stays whose check-in date matches the selected date.
-    const checkIns = stays.filter(stay =>
-      String(stay.checkIn || "").slice(0, 10) === selectedDate
-    );
-
-    const checkOuts = stays.filter(stay =>
-      String(stay.checkOut || "").slice(0, 10) === selectedDate
-    );
-
-    const paymentsToday = transactions.filter(tx =>
-      String(tx.receivedAt || "").slice(0, 10) === selectedDate
-    );
-
-    const initialPaymentsToday = stays.filter(stay =>
-      String(stay.checkIn || "").slice(0, 10) === selectedDate
-    ).reduce((sum, stay) => sum + Number(stay.paid || 0), 0);
-
-    const extraPayments = paymentsToday.reduce(
-      (sum, tx) => sum + Number(tx.amount || 0), 0
-    );
-
-    const totalBills = checkIns.reduce(
-      (sum, stay) => sum + Number(stay.total || 0), 0
-    );
-
-    const allOutstanding = stays.reduce((sum, stay) => {
-      const extraPaid = transactions
-        .filter(tx => String(tx.stayId) === String(stay.id))
-        .reduce((s, tx) => s + Number(tx.amount || 0), 0);
-      return sum + Math.max(0, Number(stay.total || 0) -
-        Number(stay.paid || 0) - extraPaid);
-    }, 0);
-
-    result.innerHTML = `
-      <h3>Report: ${selectedDate}</h3>
-      <p>Check-ins on selected date: <b>${checkIns.length}</b></p>
-      <p>Check-outs on selected date: <b>${checkOuts.length}</b></p>
-      <p>Total bills for these check-ins: <b>${money(totalBills)}</b></p>
-      <p>Initial payments for these check-ins: <b>${money(initialPaymentsToday)}</b></p>
-      <p>Additional payments received on this date: <b>${money(extraPayments)}</b></p>
-      <p>Outstanding balance across all saved stays: <b>${money(allOutstanding)}</b></p>
-      <h3>Payments received on selected date</h3>
-      <div id="hkDailyPaymentList"></div>
-      <p style="font-size:12px;color:#555;">Report uses the new Stay & Bill records stored in this browser.</p>
-    `;
-
-    const list = document.getElementById("hkDailyPaymentList");
-
-    if (!paymentsToday.length) {
-      list.textContent = "No additional payments recorded on this date.";
-    } else {
-      paymentsToday.forEach(tx => {
-        const stay = stays.find(item => String(item.id) === String(tx.stayId));
-        const line = document.createElement("p");
-        line.textContent =
-          (stay ? "Room " + stay.room + " - " + stay.customer : "Stay") +
-          ": " + money(tx.amount) + " at " +
-          new Date(tx.receivedAt).toLocaleTimeString("en-IN");
-        list.appendChild(line);
-      });
-    }
-  };
-
-  window.hkPrintDailyReport = function () {
-    if (!result.innerText.trim()) {
-      window.hkGenerateDailyReport();
-    }
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      alert("Allow pop-ups in your browser to print the report.");
-      return;
-    }
-
-    printWindow.document.write(
-      "<!doctype html><html><head><title>Hotel Krishnam Daily Report</title>" +
-      "<style>body{font-family:Arial,sans-serif;padding:20px;}</style></head><body>" +
-      result.innerHTML +
-      "<script>window.onload=function(){window.print();};<\/script></body></html>"
-    );
-    printWindow.document.close();
-  };
-
-  window.hkGenerateDailyReport();
-})();
-</script>
-
-    
-<!-- Hotel Krishnam: Backup and Restore -->
-<section style="font-family:Arial,sans-serif;background:#f4f6f8;padding:16px;id="hkBackup"margin:15px 0;border-radius:12px;">
-  <h2 style="text-align:center;color:#183153;">Hotel Krishnam</h2>
-  <h3>Backup & Restore Data</h3>
-
-  <p>अपने मोबाइल में होटल ऐप का सेव किया हुआ डेटा बैकअप के रूप में सुरक्षित रखें।</p>
-
-  <button type="button" onclick="hkCreateBackup()"
-    style="width:100%;padding:12px;background:#198754;color:white;border:0;border-radius:7px;margin:5px 0;">
-    Download Backup
-  </button>
-
-  <hr style="margin:18px 0;">
-
-  <label for="hkBackupFile"><b>Select Backup File to Restore</b></label>
-  <input id="hkBackupFile" type="file" accept=".json,application/json"
-    style="box-sizing:border-box;width:100%;padding:10px;margin:8px 0;">
-
-  <button type="button" onclick="hkRestoreBackup()"
-    style="width:100%;padding:12px;background:#183153;color:white;border:0;border-radius:7px;margin:5px 0;">
-    Restore Backup
-  </button>
-
-  <p style="font-size:12px;color:#555;">
-    Restore करने से पहले वर्तमान डेटा का नया बैकअप बना लें। बैकअप फ़ाइल सुरक्षित रखें।
-  </p>
-  <div id="hkBackupMessage" role="status" style="margin-top:10px;"></div>
-</section>
-
-<script>
-window.hkCreateBackup = function () {
+function safeRead(key, fallback) {
   try {
-    const data = {};
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      data[key] = localStorage.getItem(key);
-    }
-
-    const backup = {
-      app: "Hotel Krishnam",
-      formatVersion: 1,
-      createdAt: new Date().toISOString(),
-      data: data
-    };
-
-    const blob = new Blob(
-      [JSON.stringify(backup, null, 2)],
-      { type: "application/json" }
-    );
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "Hotel-Krishnam-Backup-" +
-      new Date().toISOString().slice(0, 10) + ".json";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-
-    document.getElementById("hkBackupMessage").textContent =
-      "Backup download started. Check your Downloads folder.";
-  } catch (error) {
-    document.getElementById("hkBackupMessage").textContent =
-      "Backup failed. Please try again.";
-  }
-};
-
-window.hkRestoreBackup = function () {
-  const fileInput = document.getElementById("hkBackupFile");
-  const message = document.getElementById("hkBackupMessage");
-  const file = fileInput.files[0];
-
-  if (!file) {
-    message.textContent = "Please select a backup JSON file first.";
-    return;
-  }
-
-  if (!confirm(
-    "Restore this backup? Keys included in the file will replace their current values. Make a fresh backup first."
-  )) {
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function () {
-    try {
-      const backup = JSON.parse(reader.result);
-
-      if (
-        !backup ||
-        backup.app !== "Hotel Krishnam" ||
-        backup.formatVersion !== 1 ||
-        !backup.data ||
-        typeof backup.data !== "object" ||
-        Array.isArray(backup.data)
-      ) {
-        throw new Error("Invalid backup format");
-      }
-
-      const entries = Object.entries(backup.data);
-
-      if (!entries.every(([key, value]) =>
-        typeof key === "string" && typeof value === "string"
-      )) {
-        throw new Error("Invalid backup data");
-      }
-
-      entries.forEach(([key, value]) => {
-        localStorage.setItem(key, value);
-      });
-
-      message.textContent =
-        "Backup restored successfully. Refresh the page to reload the app data.";
-
-      if (confirm("Backup restored. Refresh the page now?")) {
-        location.reload();
-      }
-    } catch (error) {
-      message.textContent =
-        "Restore failed. Please select a valid Hotel Krishnam backup file.";
-    }
-  };
-
-  reader.onerror = function () {
-    message.textContent = "Could not read the selected file.";
-  };
-
-  reader.readAsText(file);
-};
-</script>
-
-    
-<!-- Hotel Krishnam: Mobile Dashboard -->
-<section id="hkMainDashboard" style="font-family:Arial,sans-serif;background:#eef2f7;padding:16px;margin:15px 0;border-radius:14px;color:#183153;">
-
-  <header style="background:linear-gradient(135deg,#183153,#276678);color:white;padding:22px 16px;border-radius:14px;">
-    <div style="font-size:13px;letter-spacing:2px;">WELCOME TO</div>
-    <h1 style="margin:8px 0;font-size:27px;">HOTEL KRISHNAM</h1>
-    <p style="margin:0;">Hotel Management Dashboard</p>
-  </header>
-
-  <h3 style="margin-top:22px;">Overview</h3>
-
-  <div id="hkDashCards" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
-    <div style="background:white;padding:16px;border-radius:12px;">
-      <div style="font-size:13px;color:#667085;">Total Rooms</div>
-      <div id="hkDashRooms" style="font-size:27px;font-weight:bold;">10</div>
-      <div style="font-size:12px;">Rooms 101–110</div>
-    </div>
-
-    <div style="background:white;padding:16px;border-radius:12px;">
-      <div style="font-size:13px;color:#667085;">Saved Stays</div>
-      <div id="hkDashBookings" style="font-size:27px;font-weight:bold;">0</div>
-      <div style="font-size:12px;">Stay records</div>
-    </div>
-
-    <div style="background:white;padding:16px;border-radius:12px;">
-      <div style="font-size:13px;color:#667085;">Payment Received</div>
-      <div id="hkDashPaid" style="font-size:22px;font-weight:bold;color:#198754;">₹0</div>
-      <div style="font-size:12px;">From saved stays</div>
-    </div>
-
-    <div style="background:white;padding:16px;border-radius:12px;">
-      <div style="font-size:13px;color:#667085;">Balance Due</div>
-      <div id="hkDashDue" style="font-size:22px;font-weight:bold;color:#b45309;">₹0</div>
-      <div style="font-size:12px;">Remaining amount</div>
-    </div>
-  </div>
-
-  <h3 style="margin-top:24px;">Quick Menu</h3>
-
-  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
-    <button type="button" onclick="hkGoToSection('hkStayBill')" style="padding:16px 8px;background:#183153;color:white;border:0;border-radius:10px;font-weight:bold;">📝 Check-in / Bill</button>
-
-    <button type="button" onclick="hkGoToSection('hkAutoRoomStatus')" style="padding:16px 8px;background:#276678;color:white;border:0;border-radius:10px;font-weight:bold;">🏨 Room Status</button>
-
-    <button type="button" onclick="hkGoToSection('hkPaymentUpdate')" style="padding:16px 8px;background:#198754;color:white;border:0;border-radius:10px;font-weight:bold;">💰 Payment Update</button>
-
-    <button type="button" onclick="hkGoToSection('hkSearchBookings')" style="padding:16px 8px;background:#6f42c1;color:white;border:0;border-radius:10px;font-weight:bold;">🔎 Search Booking</button>
-
-    <button type="button" onclick="hkGoToSection('hkDailyReport')" style="padding:16px 8px;background:#b45309;color:white;border:0;border-radius:10px;font-weight:bold;">📊 Daily Report</button>
-
-    <button type="button" onclick="hkGoToSection('hkBackup')" style="padding:16px 8px;background:#475467;color:white;border:0;border-radius:10px;font-weight:bold;">💾 Backup / Restore</button>
-  </div>
-
-  <p style="text-align:center;font-size:12px;color:#667085;margin-top:22px;">
-    Hotel Krishnam • Management System
-  </p>
-</section>
-
-<script>
-(function () {
-  function read(key) {
-    try {
-      return JSON.parse(localStorage.getItem(key)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function money(value) {
-    return "₹" + Number(value || 0).toLocaleString("en-IN", {
-      maximumFractionDigits: 2
-    });
-  }
-
-  window.hkGoToSection = function (id) {
-    // Search input is inside the search section, so find its parent section.
-    let target = document.getElementById(id);
-
-    if (id === "hkSearchBookings") {
-      target = document.getElementById("hkSearchInput")?.closest("section");
-    }
-
-    if (id === "hkBackup") {
-      target = document.getElementById("hkBackupFile")?.closest("section");
-    }
-
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      alert("This section was not found on the page. Please check that its code is installed.");
-    }
-  };
-
-  window.hkRefreshDashboard = function () {
-    const stays = read("hotelKrishnamStays");
-    const transactions = read("hotelKrishnamPaymentTransactions");
-
-    let paid = 0;
-    let due = 0;
-
-    stays.forEach(stay => {
-      const extraPaid = transactions
-        .filter(tx => String(tx.stayId) === String(stay.id))
-        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
-
-      paid += Number(stay.paid || 0) + extraPaid;
-      due += Math.max(
-        0,
-        Number(stay.total || 0) - Number(stay.paid || 0) - extraPaid
-      );
-    });
-
-    document.getElementById("hkDashRooms").textContent = "10";
-    document.getElementById("hkDashBookings").textContent = stays.length;
-    document.getElementById("hkDashPaid").textContent = money(paid);
-    document.getElementById("hkDashDue").textContent = money(due);
-  };
-
-  window.hkRefreshDashboard();
-})();
-</script>
-
-<!-- HOTEL KRISHNAM AUTOMATIC ROOM STATUS -->
-<section id="hkAutoRoomStatus" style="font-family:Arial,sans-serif;background:#f4f6f8;padding:18px;margin:20px 0;border-radius:12px;">
-  <h2 style="color:#183153;">🏨 Automatic Room Status</h2>
-  <p>Room 101 से 110 तक की वर्तमान स्थिति</p>
-
-  <button type="button" onclick="hkRefreshRoomStatus()" style="padding:12px 20px;background:#276678;color:white;border:0;border-radius:8px;cursor:pointer;">
-    🔄 Refresh Room Status
-  </button>
-
-  <div id="hkRoomStatusList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px;"></div>
-</section>
-
-<script>
-function hkRefreshRoomStatus() {
-  const container = document.getElementById("hkRoomStatusList");
-  if (!container) return;
-
-  let stays = [];
-  try {
-    stays = JSON.parse(localStorage.getItem("hotelKrishnamStays") || "[]");
-    if (!Array.isArray(stays)) stays = [];
-  } catch (e) {
-    stays = [];
-  }
-
-  const now = new Date();
-
-  container.innerHTML = "";
-
-  for (let room = 101; room <= 110; room++) {
-    const activeStay = stays.find(stay => {
-      if (String(stay.room) !== String(room)) return false;
-      if (String(stay.status || "").toLowerCase() === "cancelled") return false;
-
-      const checkIn = new Date(stay.checkIn);
-      const checkOut = new Date(stay.checkOut);
-
-      return !isNaN(checkIn.getTime()) &&
-             !isNaN(checkOut.getTime()) &&
-             now >= checkIn &&
-             now < checkOut;
-    });
-
-    let status = "Available";
-    let color = "#198754";
-
-    if (activeStay) {
-      const due = Number(activeStay.due || 0);
-      status = due > 0 ? "Payment Due" : "Booked";
-      color = due > 0 ? "#dc3545" : "#276678";
-    }
-
-    const card = document.createElement("div");
-    card.style.cssText = "background:white;padding:16px;border-radius:10px;border-left:5px solid " + color + ";box-shadow:0 2px 6px #0001;";
-
-    const roomTitle = document.createElement("h3");
-    roomTitle.textContent = "Room " + room;
-
-    const statusText = document.createElement("strong");
-    statusText.style.color = color;
-    statusText.textContent = status;
-
-    card.appendChild(roomTitle);
-    card.appendChild(statusText);
-    container.appendChild(card);
+    const value = JSON.parse(localStorage.getItem(key));
+    return value == null ? fallback : value;
+  } catch (_) {
+    return fallback;
   }
 }
 
-document.addEventListener("DOMContentLoaded", hkRefreshRoomStatus);
-</script>
+function makeId() {
+  return "HK-" + Date.now().toString(36) + "-" +
+    Math.random().toString(36).slice(2,8);
+}
 
-<script>
-(function () {
-  const totalInput = document.getElementById("hkTotalAmount");
-  const paidInput = document.getElementById("hkPaidAmount");
-  const balanceInput = document.getElementById("hkBalanceAmount");
-
-  if (!totalInput || !paidInput || !balanceInput) {
-    return;
-  }
-
-  function updateBalance() {
-    const total = Number(totalInput.value);
-    const paid = Number(paidInput.value);
-
-    const balance = total - paid;
-
-    balanceInput.value =
-      totalInput.value === "" || paidInput.value === ""
-        ? ""
-        : Math.max(0, balance).toFixed(2);
-
-    if (paid > total) {
-      balanceInput.setCustomValidity(
-        "Paid amount cannot be greater than total rent."
-      );
-    } else {
-      balanceInput.setCustomValidity("");
-    }
-  }
-
-  totalInput.addEventListener("input", updateBalance);
-  paidInput.addEventListener("input", updateBalance);
-})();
-</script>
-
-</body>
-    
-<!-- Hotel Krishnam Payment Panel -->
-<section id="payment-panel" style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #ddd;border-radius:12px;font-family:Arial,sans-serif;background:#fff;">
-  <h2 style="text-align:center;color:#174a35;">Hotel Krishnam</h2>
-  <h3>Payment & Due Balance</h3>
-
-  <label>Room Number</label>
-  <select id="payRoom" style="width:100%;padding:12px;margin:8px 0;">
-    <option value="">Select Room</option>
-  </select>
-
-  <label>Customer Name</label>
-  <input id="payName" placeholder="Enter customer name"
-    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
-
-  <label>Total Bill (₹)</label>
-  <input id="totalBill" type="number" min="0" step="0.01" value="0"
-    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
-
-  <label>Payment Received Now (₹)</label>
-  <input id="paymentNow" type="number" min="0" step="0.01" value="0"
-    style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
-
-  <button type="button" onclick="calculatePayment()"
-    style="width:100%;padding:12px;background:#176b45;color:white;border:0;border-radius:6px;margin:10px 0;">
-    Calculate Balance
-  </button>
-
-  <div style="padding:12px;background:#f2f7f3;border-radius:8px;">
-    <p>Total Bill: ₹<strong id="showTotal">0.00</strong></p>
-    <p>Total Paid: ₹<strong id="showPaid">0.00</strong></p>
-    <p>Due Balance: ₹<strong id="showDue">0.00</strong></p>
-    <p>Status: <strong id="showStatus">Pending</strong></p>
-  </div>
-
-  <button type="button" onclick="savePayment()"
-    style="width:100%;padding:12px;background:#174a35;color:white;border:0;border-radius:6px;margin-top:12px;">
-    Save Payment
-  </button>
-
-  <h3>Payment Records</h3>
-  <div id="paymentRecords"></div>
-</section>
-
-<script>
-(function () {
-  const roomSelect = document.getElementById("payRoom");
-  for (let room = 101; room <= 110; room++) {
-    const option = document.createElement("option");
-    option.value = room;
-    option.textContent = "Room " + room;
-    roomSelect.appendChild(option);
-  }
-})();
-
-function readPayments() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("hotelKrishnamPayments") || "[]"
-    );
-  } catch (error) {
-    return [];
-  }
+function number(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
 }
 
 function money(value) {
-  return Number(value).toFixed(2);
-}
-
-function calculatePayment() {
-  const total = Number(document.getElementById("totalBill").value);
-  const now = Number(document.getElementById("paymentNow").value);
-
-  if (!Number.isFinite(total) || !Number.isFinite(now) ||
-      total < 0 || now < 0 || now > total) {
-    alert("Please enter valid amounts. Payment cannot exceed total bill.");
-    return false;
-  }
-
-  const room = document.getElementById("payRoom").value;
-  const name = document.getElementById("payName").value.trim();
-
-  if (!room || !name) {
-    alert("Please select room number and enter customer name.");
-    return false;
-  }
-
-  const existing = readPayments().find(
-    p => p.room === room && p.name === name
-  );
-
-  const alreadyPaid = existing ? existing.paid : 0;
-  const newPaid = alreadyPaid + now;
-
-  if (newPaid > total) {
-    alert("Total payments cannot exceed the total bill.");
-    return false;
-  }
-
-  const due = total - newPaid;
-
-  document.getElementById("showTotal").textContent = money(total);
-  document.getElementById("showPaid").textContent = money(newPaid);
-  document.getElementById("showDue").textContent = money(due);
-  document.getElementById("showStatus").textContent =
-    due === 0 ? "Paid" : "Pending";
-
-  return { room, name, total, paid: newPaid, due };
-}
-
-function savePayment() {
-  const result = calculatePayment();
-  if (!result) return;
-
-  const records = readPayments();
-  const index = records.findIndex(
-    p => p.room === result.room && p.name === result.name
-  );
-
-  const record = {
-    ...result,
-    updatedAt: new Date().toISOString()
-  };
-
-  if (index >= 0) {
-    records[index] = record;
-  } else {
-    records.push(record);
-  }
-
-  try {
-    localStorage.setItem(
-      "hotelKrishnamPayments",
-      JSON.stringify(records)
-    );
-    renderPaymentRecords();
-    document.getElementById("paymentNow").value = 0;
-    alert("Payment saved successfully!");
-  } catch (error) {
-    alert("Payment save nahi hua. Browser storage check karein.");
-  }
-}
-
-function renderPaymentRecords() {
-  const container = document.getElementById("paymentRecords");
-  container.replaceChildren();
-
-  readPayments().forEach(record => {
-    const item = document.createElement("div");
-    item.style.cssText =
-      "padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px;";
-
-    const title = document.createElement("strong");
-    title.textContent = "Room " + record.room + " — " + record.name;
-
-    const details = document.createElement("p");
-    details.textContent =
-      "Bill: ₹" + money(record.total) +
-      " | Paid: ₹" + money(record.paid) +
-      " | Due: ₹" + money(record.due) +
-      " | " + (record.due === 0 ? "Paid" : "Pending");
-
-    item.append(title, details);
-    container.appendChild(item);
+  return "₹" + number(value).toLocaleString("en-IN", {
+    minimumFractionDigits:2, maximumFractionDigits:2
   });
 }
 
-renderPaymentRecords();
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[c]));
+}
+
+function validDate(value) {
+  const d = new Date(value);
+  return Number.isFinite(d.getTime()) ? d.getTime() : NaN;
+}
+
+function createEmptyDB() {
+  return {
+    version:2,
+    stays:[],
+    transactions:[],
+    roomOverrides:{}
+  };
+}
+
+function loadDB() {
+  const saved = safeRead(DB_KEY, null);
+  if (saved && Array.isArray(saved.stays) &&
+      Array.isArray(saved.transactions)) {
+    saved.roomOverrides = saved.roomOverrides || {};
+    return saved;
+  }
+
+  const db = createEmptyDB();
+
+  // Import earlier Stay & Bill records.
+  const oldStays = safeRead("hotelKrishnamStays", []);
+  if (Array.isArray(oldStays)) {
+    oldStays.forEach((s, i) => {
+      if (!s || !s.room || !s.customer) return;
+      db.stays.push({
+        id:String(s.id ?? ("old-stay-" + i)),
+        room:String(s.room),
+        customer:String(s.customer),
+        mobile:String(s.mobile || ""),
+        address:String(s.address || ""),
+        checkIn:String(s.checkIn || ""),
+        checkOut:String(s.checkOut || ""),
+        total:number(s.total),
+        paid:number(s.paid),
+        status:s.status || "Booked",
+        createdAt:s.createdAt || s.checkIn || new Date().toISOString()
+      });
+    });
+  }
+
+  // Import earlier payment transactions.
+  const oldTransactions = safeRead("hotelKrishnamPaymentTransactions", []);
+  if (Array.isArray(oldTransactions)) {
+    oldTransactions.forEach((tx, i) => {
+      if (!tx) return;
+      db.transactions.push({
+        id:String(tx.id || ("old-payment-" + i)),
+        stayId:String(tx.stayId),
+        amount:number(tx.amount),
+        receivedAt:tx.receivedAt || new Date().toISOString()
+      });
+    });
+  }
+
+  // Import bookings from the original booking screen where possible.
+  const oldBookings = safeRead("hotelBookings", []);
+  if (Array.isArray(oldBookings)) {
+    oldBookings.forEach((b, i) => {
+      if (!b || !b.roomNumber || !b.customerName) return;
+      const alreadyImported = db.stays.some(s =>
+        s.customer === String(b.customerName) &&
+        s.room === String(b.roomNumber) &&
+        s.checkIn === [b.checkInDate,b.checkInTime].filter(Boolean).join("T")
+      );
+      if (alreadyImported) return;
+
+      const checkIn = [b.checkInDate,b.checkInTime].filter(Boolean).join("T");
+      const checkOut = [b.checkOutDate,b.checkOutTime].filter(Boolean).join("T");
+      db.stays.push({
+        id:"old-booking-" + i,
+        room:String(b.roomNumber),
+        customer:String(b.customerName),
+        mobile:String(b.mobile || ""),
+        address:String(b.address || ""),
+        checkIn, checkOut,
+        total:number(b.total),
+        paid:number(b.advance),
+        status:b.status === "Checked-Out" ? "Checked-Out" :
+          b.status === "Checked-In" ? "Checked-In" : "Booked",
+        createdAt:checkIn || new Date().toISOString()
+      });
+    });
+  }
+
+  saveDB(db);
+  return db;
+}
+
+let db = loadDB();
+let editingId = null;
+
+function saveDB(next = db) {
+  localStorage.setItem(DB_KEY, JSON.stringify(next));
+  db = next;
+}
+
+function getTransactions(stayId) {
+  return db.transactions.filter(tx => String(tx.stayId) === String(stayId));
+}
+
+function totalPaid(stay) {
+  return Math.max(0, number(stay.paid)) +
+    getTransactions(stay.id).reduce((sum, tx) => sum + number(tx.amount), 0);
+}
+
+function balanceDue(stay) {
+  return Math.max(0, number(stay.total) - totalPaid(stay));
+}
+
+function paymentStatus(stay) {
+  return balanceDue(stay) <= 0 ? "Paid" : "Payment Due";
+}
+
+function isCancelled(stay) {
+  return String(stay.status).toLowerCase() === "cancelled";
+}
+
+function overlaps(aStart,aEnd,bStart,bEnd) {
+  return aStart < bEnd && bStart < aEnd;
+}
+
+function findConflict(room, checkIn, checkOut, exceptId=null) {
+  const start = validDate(checkIn);
+  const end = validDate(checkOut);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+    return null;
+  }
+
+  return db.stays.find(stay => {
+    if (String(stay.room) !== String(room) ||
+        String(stay.id) === String(exceptId) ||
+        isCancelled(stay)) return false;
+
+    const oldStart = validDate(stay.checkIn);
+    const oldEnd = validDate(stay.checkOut);
+    if (!Number.isFinite(oldStart) || !Number.isFinite(oldEnd) || oldEnd <= oldStart) {
+      return false;
+    }
+    return overlaps(start,end,oldStart,oldEnd);
+  }) || null;
+}
+
+function currentRoomStatus(room) {
+  const now = Date.now();
+  const relevant = db.stays
+    .filter(s => String(s.room) === String(room) && !isCancelled(s))
+    .sort((a,b) => validDate(b.checkIn) - validDate(a.checkIn));
+
+  const active = relevant.find(s => {
+    const start = validDate(s.checkIn);
+    const end = validDate(s.checkOut);
+    return Number.isFinite(start) && Number.isFinite(end) &&
+      now >= start && now < end && s.status !== "Checked-Out";
+  });
+
+  if (active) {
+    if (balanceDue(active) > 0) return "Payment Due";
+    return active.status === "Checked-In" ? "Occupied" : "Booked";
+  }
+
+  const future = relevant.find(s => {
+    const start = validDate(s.checkIn);
+    return Number.isFinite(start) && start > now &&
+      s.status !== "Checked-Out";
+  });
+  if (future) return "Booked";
+
+  return db.roomOverrides[String(room)] || "Available";
+}
+
+function fillRoomOptions() {
+  const select = document.getElementById("room");
+  select.innerHTML = "";
+  ROOM_NUMBERS.forEach(room => {
+    const option = document.createElement("option");
+    option.value = room;
+    option.textContent = "Room " + room;
+    select.appendChild(option);
+  });
+}
+
+function updateBalance() {
+  const totalField = document.getElementById("total");
+  const paidField = document.getElementById("paid");
+  const balanceField = document.getElementById("balance");
+  const total = number(totalField.value);
+  const paid = number(paidField.value);
+  balanceField.value = Math.max(0,total-paid).toFixed(2);
+  paidField.setCustomValidity(paid > total ?
+    "Paid amount cannot be greater than total amount." : "");
+}
+
+function showMessage(id, text, error=false) {
+  const element = document.getElementById(id);
+  element.textContent = text;
+  element.classList.remove("hidden","danger-notice");
+  if (error) element.classList.add("danger-notice");
+}
+
+function resetForm() {
+  editingId = null;
+  document.getElementById("stayForm").reset();
+  document.getElementById("paid").value = "0";
+  document.getElementById("balance").value = "0.00";
+  document.getElementById("saveStayButton").textContent = "💾 Save Booking";
+  document.getElementById("formMessage").classList.add("hidden");
+}
+
+document.getElementById("total").addEventListener("input",updateBalance);
+document.getElementById("paid").addEventListener("input",updateBalance);
+
+document.getElementById("stayForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const customer = document.getElementById("customer").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const room = document.getElementById("room").value;
+  const checkIn = document.getElementById("checkIn").value;
+  const checkOut = document.getElementById("checkOut").value;
+  const totalField = document.getElementById("total").value;
+  const paidField = document.getElementById("paid").value;
+  const total = Number(totalField);
+  const paid = Number(paidField || 0);
+
+  if (!customer || !room || !checkIn || !checkOut || totalField === "") {
+    showMessage("formMessage","कृपया सभी ज़रूरी जानकारी भरें।",true);
+    return;
+  }
+
+  const start = validDate(checkIn);
+  const end = validDate(checkOut);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+    showMessage("formMessage","कृपया सही Check-in और Check-out तारीख व समय भरें। Check-out बाद का होना चाहिए।",true);
+    return;
+  }
+
+  if (!Number.isFinite(total) || !Number.isFinite(paid) ||
+      total < 0 || paid < 0 || paid > total) {
+    showMessage("formMessage","राशि सही भरें। Paid Amount, Total Amount से अधिक नहीं हो सकता।",true);
+    return;
+  }
+
+  const conflict = findConflict(room,checkIn,checkOut,editingId);
+  if (conflict) {
+    showMessage("formMessage",
+      "Room " + room + " इस समय पहले से बुक है: " + conflict.customer +
+      ". कृपया दूसरी तारीख या कमरा चुनें।",true);
+    return;
+  }
+
+  if (editingId) {
+    const old = db.stays.find(s => String(s.id) === String(editingId));
+    if (!old) {
+      alert("Booking नहीं मिली। पेज refresh करके दोबारा कोशिश करें।");
+      return;
+    }
+    old.customer = customer;
+    old.mobile = mobile;
+    old.address = address;
+    old.room = room;
+    old.checkIn = checkIn;
+    old.checkOut = checkOut;
+    old.total = total;
+    old.paid = paid;
+  } else {
+    db.stays.push({
+      id:makeId(), room, customer, mobile, address,
+      checkIn, checkOut, total, paid,
+      status:"Booked",
+      createdAt:new Date().toISOString()
+    });
+  }
+
+  saveDB();
+  resetForm();
+  renderAll();
+  showMessage("formMessage","Booking सफलतापूर्वक सेव हो गई।");
+});
+
+function renderRooms() {
+  const grid = document.getElementById("roomGrid");
+  grid.innerHTML = "";
+
+  let available=0,occupied=0,due=0,cleaning=0;
+
+  ROOM_NUMBERS.forEach(room => {
+    const status = currentRoomStatus(room);
+    if (status === "Available") available++;
+    if (status === "Occupied") occupied++;
+    if (status === "Payment Due") due++;
+    if (status === "Cleaning") cleaning++;
+
+    const card = document.createElement("div");
+    card.className = "room-card " + status.replace(/\s/g,"-");
+
+    const title = document.createElement("h3");
+    title.textContent = "Room " + room;
+    const statusText = document.createElement("p");
+    statusText.textContent = status;
+
+    const select = document.createElement("select");
+    ["Available","Cleaning"].forEach(optionText => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = "Set " + optionText;
+      option.selected = status === optionText;
+      select.appendChild(option);
+    });
+    select.addEventListener("change", () => {
+      const active = db.stays.find(s =>
+        String(s.room) === room && !isCancelled(s) &&
+        s.status !== "Checked-Out" &&
+        validDate(s.checkIn) <= Date.now() &&
+        Date.now() < validDate(s.checkOut)
+      );
+      if (active) {
+        alert("यह कमरा अभी बुक/ऑक्युपाइड है। पहले Check-out करें।");
+        renderRooms();
+        return;
+      }
+      db.roomOverrides[room] = select.value;
+      saveDB();
+      renderAll();
+    });
+
+    card.append(title,statusText,select);
+    grid.appendChild(card);
+  });
+
+  document.getElementById("totalRooms").textContent = ROOM_NUMBERS.length;
+  document.getElementById("availableRooms").textContent = available;
+  document.getElementById("occupiedRooms").textContent = occupied;
+  document.getElementById("dueRooms").textContent = due;
+  document.getElementById("cleaningRooms").textContent = cleaning;
+}
+
+function renderBookings() {
+  const list = document.getElementById("bookingList");
+  const query = document.getElementById("search").value.trim().toLowerCase();
+  list.innerHTML = "";
+
+  const matches = db.stays.filter(s =>
+    [s.customer,s.mobile,s.room,s.address].some(value =>
+      String(value || "").toLowerCase().includes(query)
+    )
+  ).slice().reverse();
+
+  if (!matches.length) {
+    list.textContent = "कोई बुकिंग नहीं मिली।";
+    return;
+  }
+
+  matches.forEach(stay => {
+    const card = document.createElement("div");
+    card.className = "booking-card";
+    const due = balanceDue(stay);
+
+    card.innerHTML = `
+      <h3>Room ${esc(stay.room)} — ${esc(stay.customer)}</h3>
+      <p><b>Mobile:</b> ${esc(stay.mobile || "-")}</p>
+      <p><b>Address:</b> ${esc(stay.address || "-")}</p>
+      <p><b>Check-in:</b> ${esc(String(stay.checkIn).replace("T"," "))}</p>
+      <p><b>Check-out:</b> ${esc(String(stay.checkOut).replace("T"," "))}</p>
+      <p><b>Total:</b> ${money(stay.total)} |
+         <b>Paid:</b> ${money(totalPaid(stay))} |
+         <b>Balance:</b> ${money(due)}</p>
+      <p><b>Booking Status:</b> ${esc(stay.status || "Booked")} |
+         <b>Payment:</b> ${esc(paymentStatus(stay))}</p>
+      <div class="actions"></div>
+    `;
+
+    const actions = card.querySelector(".actions");
+    addButton(actions,"View","blue",() => viewStay(stay.id));
+    addButton(actions,"Bill","purple",() => showBill(stay.id));
+    addButton(actions,"Edit","grey",() => editStay(stay.id));
+
+    if (stay.status === "Booked") {
+      addButton(actions,"Check-in","orange",() => changeStayStatus(stay.id,"Checked-In"));
+    }
+    if (stay.status === "Checked-In") {
+      addButton(actions,"Check-out","red",() => checkoutStay(stay.id));
+    }
+    if (stay.status === "Checked-Out") {
+      addButton(actions,"Mark Room Available","green",() => markAvailable(stay.room));
+    }
+
+    addButton(actions,"Delete","red",() => deleteStay(stay.id));
+    list.appendChild(card);
+  });
+}
+
+function addButton(parent,label,cls,callback) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = cls;
+  button.textContent = label;
+  button.addEventListener("click",callback);
+  parent.appendChild(button);
+}
+
+function viewStay(id) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  alert(
+    "Customer: " + s.customer +
+    "\nMobile: " + (s.mobile || "-") +
+    "\nAddress: " + (s.address || "-") +
+    "\nRoom: " + s.room +
+    "\nCheck-in: " + s.checkIn.replace("T"," ") +
+    "\nCheck-out: " + s.checkOut.replace("T"," ") +
+    "\nTotal: " + money(s.total) +
+    "\nPaid: " + money(totalPaid(s)) +
+    "\nBalance: " + money(balanceDue(s)) +
+    "\nStatus: " + s.status
+  );
+}
+
+function editStay(id) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  if (s.status === "Checked-Out") {
+    alert("Check-out हो चुकी बुकिंग को यहाँ edit नहीं किया जा सकता।");
+    return;
+  }
+
+  editingId = s.id;
+  document.getElementById("customer").value = s.customer || "";
+  document.getElementById("mobile").value = s.mobile || "";
+  document.getElementById("address").value = s.address || "";
+  document.getElementById("room").value = s.room;
+  document.getElementById("checkIn").value = s.checkIn || "";
+  document.getElementById("checkOut").value = s.checkOut || "";
+  document.getElementById("total").value = s.total;
+  document.getElementById("paid").value = s.paid || 0;
+  updateBalance();
+  document.getElementById("saveStayButton").textContent = "Update Booking";
+  document.getElementById("bookingSection").scrollIntoView({behavior:"smooth"});
+}
+
+function changeStayStatus(id,status) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  if (status === "Checked-In") {
+    const conflict = findConflict(s.room,s.checkIn,s.checkOut,s.id);
+    if (conflict) {
+      alert("इस कमरे में दूसरी बुकिंग का समय टकरा रहा है।");
+      return;
+    }
+  }
+  s.status = status;
+  if (status === "Checked-In") delete db.roomOverrides[s.room];
+  saveDB();
+  renderAll();
+}
+
+function checkoutStay(id) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  if (!confirm("Room " + s.room + " का Check-out करें?")) return;
+  s.status = "Checked-Out";
+  db.roomOverrides[s.room] = "Cleaning";
+  saveDB();
+  renderAll();
+}
+
+function markAvailable(room) {
+  const hasActive = db.stays.some(s =>
+    String(s.room) === String(room) &&
+    !isCancelled(s) && s.status !== "Checked-Out" &&
+    validDate(s.checkIn) <= Date.now() &&
+    Date.now() < validDate(s.checkOut)
+  );
+  if (hasActive) {
+    alert("इस कमरे की सक्रिय बुकिंग है। इसे Available नहीं कर सकते।");
+    return;
+  }
+  db.roomOverrides[String(room)] = "Available";
+  saveDB();
+  renderAll();
+}
+
+function deleteStay(id) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  if (!confirm("Room " + s.room + " — " + s.customer + " की बुकिंग और उससे जुड़ी पेमेंट हिस्ट्री हटाएँ?")) return;
+  db.stays = db.stays.filter(x => String(x.id) !== String(id));
+  db.transactions = db.transactions.filter(tx => String(tx.stayId) !== String(id));
+  saveDB();
+  renderAll();
+}
+
+function showBill(id) {
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) return;
+  const history = getTransactions(s.id);
+  document.getElementById("billPreview").innerHTML = `
+    <div id="printArea" style="max-width:700px;margin:auto;padding:20px;border:1px solid #ddd;background:white;">
+      <h2 style="text-align:center;color:#183153;">HOTEL KRISHNAM</h2>
+      <p style="text-align:center;">Contact: 9630918592 / 8823888592</p>
+      <hr>
+      <h3 style="text-align:center;">CUSTOMER BILL / RECEIPT</h3>
+      <p><b>Receipt:</b> HK-${esc(s.id)}</p>
+      <p><b>Customer:</b> ${esc(s.customer)}</p>
+      <p><b>Mobile:</b> ${esc(s.mobile || "-")}</p>
+      <p><b>Address:</b> ${esc(s.address || "-")}</p>
+      <p><b>Room:</b> ${esc(s.room)}</p>
+      <p><b>Check-in:</b> ${esc(String(s.checkIn).replace("T"," "))}</p>
+      <p><b>Check-out:</b> ${esc(String(s.checkOut).replace("T"," "))}</p>
+      <hr>
+      <p>Total Bill: <b>${money(s.total)}</b></p>
+      <p>Initial Payment: <b>${money(s.paid)}</b></p>
+      ${history.map(tx => `<p>Additional Payment: <b>${money(tx.amount)}</b> — ${esc(new Date(tx.receivedAt).toLocaleString("en-IN"))}</p>`).join("")}
+      <p>Total Paid: <b>${money(totalPaid(s))}</b></p>
+      <p>Balance Due: <b>${money(balanceDue(s))}</b></p>
+      <p>Payment Status: <b>${esc(paymentStatus(s))}</b></p>
+      <p style="text-align:center;margin-top:25px;">Thank you for staying with Hotel Krishnam!</p>
+      <div class="no-print" style="text-align:center;">
+        <button class="green" onclick="window.print()">Print Bill</button>
+      </div>
+    </div>`;
+  document.getElementById("billPreview").scrollIntoView({behavior:"smooth"});
+}
+
+function addPayment() {
+  const id = document.getElementById("paymentStay").value;
+  const amount = Number(document.getElementById("paymentAmount").value);
+  const s = db.stays.find(x => String(x.id) === String(id));
+
+  if (!s) {
+    showMessage("paymentMessage","पहले बुकिंग चुनें।",true);
+    return;
+  }
+  if (!Number.isFinite(amount) || amount <= 0) {
+    showMessage("paymentMessage","पेमेंट की राशि ₹0 से अधिक भरें।",true);
+    return;
+  }
+  if (amount > balanceDue(s)) {
+    showMessage("paymentMessage","पेमेंट बकाया राशि से अधिक है: " + money(balanceDue(s)),true);
+    return;
+  }
+
+  db.transactions.push({
+    id:makeId(), stayId:s.id, amount,
+    receivedAt:new Date().toISOString()
+  });
+  saveDB();
+  document.getElementById("paymentAmount").value = "";
+  showMessage("paymentMessage","पेमेंट सेव हो गई। बकाया: " + money(balanceDue(s)));
+  renderAll();
+  renderPaymentHistory(s.id);
+}
+
+function renderPaymentOptions() {
+  const select = document.getElementById("paymentStay");
+  const oldValue = select.value;
+  select.innerHTML = "";
+  db.stays.slice().reverse().forEach(s => {
+    const option = document.createElement("option");
+    option.value = s.id;
+    option.textContent = "Room " + s.room + " - " + s.customer +
+      " | Due " + money(balanceDue(s));
+    select.appendChild(option);
+  });
+  if (db.stays.some(s => String(s.id) === String(oldValue))) select.value = oldValue;
+  if (!select.value && select.options.length) select.selectedIndex = 0;
+  if (!select.options.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No saved bookings";
+    select.appendChild(option);
+  }
+}
+
+function renderPaymentHistory(id) {
+  const container = document.getElementById("paymentHistory");
+  container.innerHTML = "";
+  const s = db.stays.find(x => String(x.id) === String(id));
+  if (!s) {
+    container.textContent = "बुकिंग चुनें।";
+    return;
+  }
+  const initial = document.createElement("p");
+  initial.textContent = "Initial payment: " + money(s.paid);
+  container.appendChild(initial);
+  const txs = getTransactions(s.id);
+  if (!txs.length) {
+    const p = document.createElement("p");
+    p.textContent = "अभी कोई अतिरिक्त पेमेंट दर्ज नहीं है।";
+    container.appendChild(p);
+  }
+  txs.forEach(tx => {
+    const p = document.createElement("p");
+    p.textContent = new Date(tx.receivedAt).toLocaleString("en-IN") +
+      " — " + money(tx.amount);
+    container.appendChild(p);
+  });
+}
+
+document.getElementById("paymentStay").addEventListener("change",function() {
+  renderPaymentHistory(this.value);
+});
+
+function generateReport() {
+  const date = document.getElementById("reportDate").value;
+  const result = document.getElementById("reportResult");
+  if (!date) {
+    result.textContent = "कृपया रिपोर्ट की तारीख चुनें।";
+    return;
+  }
+
+  const checkIns = db.stays.filter(s => String(s.checkIn).slice(0,10) === date);
+  const checkOuts = db.stays.filter(s => String(s.checkOut).slice(0,10) === date);
+  const payments = db.transactions.filter(tx =>
+    String(tx.receivedAt).slice(0,10) === date
+  );
+  const initialPaid = checkIns.reduce((sum,s) => sum + number(s.paid),0);
+  const extraPaid = payments.reduce((sum,tx) => sum + number(tx.amount),0);
+  const billTotal = checkIns.reduce((sum,s) => sum + number(s.total),0);
+  const dueTotal = db.stays.reduce((sum,s) => sum + balanceDue(s),0);
+
+  result.innerHTML = `
+    <div id="reportPrintArea">
+      <h3>Daily Report: ${esc(date)}</h3>
+      <p>Check-ins: <b>${checkIns.length}</b></p>
+      <p>Check-outs: <b>${checkOuts.length}</b></p>
+      <p>Total bills for check-ins: <b>${money(billTotal)}</b></p>
+      <p>Initial payments for check-ins: <b>${money(initialPaid)}</b></p>
+      <p>Additional payments received on selected date: <b>${money(extraPaid)}</b></p>
+      <p>Outstanding balance across all stays: <b>${money(dueTotal)}</b></p>
+    </div>`;
+}
+
+function printReport() {
+  generateReport();
+  const content = document.getElementById("reportResult").innerHTML;
+  const w = window.open("","_blank");
+  if (!w) {
+    alert("रिपोर्ट प्रिंट करने के लिए pop-ups allow करें।");
+    return;
+  }
+  w.document.write("<!doctype html><html><head><title>Hotel Krishnam Report</title><style>body{font-family:Arial;padding:25px}</style></head><body>" + content + "<script>window.onload=function(){window.print()}<\/script></body></html>");
+  w.document.close();
+}
+
+function downloadBackup() {
+  const backup = {
+    app:"Hotel Krishnam",
+    version:2,
+    createdAt:new Date().toISOString(),
+    database:db
+  };
+  const blob = new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Hotel-Krishnam-Backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+  showMessage("backupMessage","Backup डाउनलोड शुरू हो गया। Downloads फ़ोल्डर में देखें।");
+}
+
+function restoreBackup() {
+  const file = document.getElementById("backupFile").files[0];
+  if (!file) {
+    showMessage("backupMessage","पहले backup JSON फ़ाइल चुनें।",true);
+    return;
+  }
+  if (!confirm("Restore करने से वर्तमान unified डेटा बदल जाएगा। पहले बैकअप बना लिया है?")) return;
+
+  const reader = new FileReader();
+  reader.onload = function() {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data.app !== "Hotel Krishnam" || !data.database ||
+          !Array.isArray(data.database.stays) ||
+          !Array.isArray(data.database.transactions)) {
+        throw new Error("Invalid backup");
+      }
+      saveDB({
+        version:2,
+        stays:data.database.stays,
+        transactions:data.database.transactions,
+        roomOverrides:data.database.roomOverrides || {}
+      });
+      renderAll();
+      showMessage("backupMessage","Backup सफलतापूर्वक restore हो गया।");
+    } catch (_) {
+      showMessage("backupMessage","Backup फ़ाइल सही नहीं है या पढ़ी नहीं जा सकी।",true);
+    }
+  };
+  reader.onerror = () => showMessage("backupMessage","फ़ाइल पढ़ने में समस्या हुई।",true);
+  reader.readAsText(file);
+}
+
+function renderDashboard() {
+  let paid = 0, due = 0;
+  db.stays.forEach(s => {
+    paid += totalPaid(s);
+    due += balanceDue(s);
+  });
+  document.getElementById("totalStays").textContent = db.stays.length;
+  document.getElementById("totalCollected").textContent = money(paid);
+  document.getElementById("totalOutstanding").textContent = money(due);
+}
+
+function renderAll() {
+  renderRooms();
+  renderBookings();
+  renderPaymentOptions();
+  renderDashboard();
+  renderPaymentHistory(document.getElementById("paymentStay").value);
+}
+
+document.getElementById("search").addEventListener("input",renderBookings);
+
+fillRoomOptions();
+document.getElementById("reportDate").value =
+  new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+renderAll();
 </script>
+</body>
 </html>
