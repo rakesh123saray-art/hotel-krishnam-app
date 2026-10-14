@@ -52,9 +52,84 @@ button:disabled{opacity:.5;cursor:not-allowed}
  #printArea{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0}
  .no-print{display:none!important}
 }
+ 
+/* Hotel Krishnam Login Screen */
+.hk-login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #102a43;
+  padding: 20px;
+}
+
+.hk-login-box {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  color: #222;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  text-align: center;
+}
+
+.hk-login-box h2 {
+  margin-top: 0;
+  color: #102a43;
+}
+
+.hk-login-box input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid #bbb;
+  border-radius: 7px;
+  font-size: 16px;
+}
+
+.hk-login-box button {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 7px;
+  background: #1266a8;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hk-login-error {
+  color: #c62828;
+  font-size: 14px;
+}
+
 </style>
 </head>
 <body>
+ 
+<div id="hkLoginOverlay" class="hk-login-overlay">
+  <form class="hk-login-box" onsubmit="return hkLogin(event)">
+    <h2>🏨 Hotel Krishnam</h2>
+    <p>Management App Login</p>
+
+    <input
+      id="hkLoginPassword"
+      type="password"
+      placeholder="Enter Login Password"
+      autocomplete="current-password"
+      required
+    >
+
+    <button type="submit">Login</button>
+
+    <p id="hkLoginError" class="hk-login-error"></p>
+  </form>
+</div>
+
 <header>
   <h1>HOTEL KRISHNAM</h1>
   <p>Hotel Management System</p>
@@ -1178,6 +1253,35 @@ function renderAll() {
 }
 
 document.getElementById("search").addEventListener("input",renderBookings);
+
+ 
+const HK_APP_PASSWORD = "Krishnam@123";
+
+function hkLogin(event) {
+  event.preventDefault();
+
+  const enteredPassword =
+    document.getElementById("hkLoginPassword").value;
+
+  if (enteredPassword === HK_APP_PASSWORD) {
+    sessionStorage.setItem("hkAppLoggedIn", "yes");
+
+    document.getElementById("hkLoginOverlay").style.display = "none";
+    document.getElementById("hkLoginError").textContent = "";
+
+    return false;
+  }
+
+  document.getElementById("hkLoginError").textContent =
+    "गलत पासवर्ड! दोबारा कोशिश करें।";
+
+  document.getElementById("hkLoginPassword").value = "";
+  return false;
+}
+
+if (sessionStorage.getItem("hkAppLoggedIn") === "yes") {
+  document.getElementById("hkLoginOverlay").style.display = "none";
+}
 
 fillRoomOptions();
 document.getElementById("reportDate").value =
