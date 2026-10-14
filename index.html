@@ -133,6 +133,66 @@ button:disabled{opacity:.5;cursor:not-allowed}
     <input id="search" placeholder="Search name, mobile or room number...">
     <div id="bookingList"></div>
   </section>
+ 
+<section class="section" id="advanceBillSection">
+  <h2>🧾 Advance Booking Bill</h2>
+
+  <div class="grid">
+    <div>
+      <label for="advBillNo">Bill Number</label>
+      <input id="advBillNo" readonly>
+    </div>
+
+    <div>
+      <label for="advBookingDate">Booking Date *</label>
+      <input id="advBookingDate" type="date" required>
+    </div>
+
+    <div>
+      <label for="advCustomerName">Customer Name *</label>
+      <input id="advCustomerName" required>
+    </div>
+
+    <div>
+      <label for="advCustomerMobile">Customer Mobile *</label>
+      <input id="advCustomerMobile" type="tel" required>
+    </div>
+
+    <div>
+      <label for="advCheckIn">Check-in Date & Time *</label>
+      <input id="advCheckIn" type="datetime-local" required>
+    </div>
+
+    <div>
+      <label for="advCheckOut">Check-out Date & Time *</label>
+      <input id="advCheckOut" type="datetime-local" required>
+    </div>
+
+    <div>
+      <label for="advTotalPayment">Total Payment (₹) *</label>
+      <input id="advTotalPayment" type="number" min="0" step="0.01" required>
+    </div>
+
+    <div>
+      <label for="advAdvancePayment">Advance Payment (₹) *</label>
+      <input id="advAdvancePayment" type="number" min="0" step="0.01" value="0" required>
+    </div>
+
+    <div>
+      <label for="advBalancePayment">Balance Payment (₹)</label>
+      <input id="advBalancePayment" readonly value="0.00">
+    </div>
+  </div>
+
+  <p id="advBillMessage" class="notice hidden"></p>
+
+  <button type="button" class="green" onclick="generateAdvanceBill()">
+    Generate Advance Bill
+  </button>
+
+  <div id="advanceBillPreview"></div>
+</section>
+
 
   <section class="section" id="paymentSection">
     <h2>💰 Update Customer Payment</h2>
@@ -389,6 +449,179 @@ function currentRoomStatus(room) {
 
   return db.roomOverrides[String(room)] || "Available";
 }
+
+ 
+function setAdvanceBillNumber() {
+  const next = Number(
+    localStorage.getItem("hotelKrishnamAdvanceBillCounter") || "1"
+  );
+
+  document.getElementById("advBillNo").value =
+    "HK-ADV-" + String(next).padStart(4, "0");
+}
+
+function setAdvanceBookingDate() {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+  document.getElementById("advBookingDate").value =
+    date.toISOString().slice(0, 10);
+}
+
+function updateAdvanceBalance() {
+  const total = Number(
+    document.getElementById("advTotalPayment").value || 0
+  );
+  const advance = Number(
+    document.getElementById("advAdvancePayment").value || 0
+  );
+
+  document.getElementById("advBalancePayment").value =
+    Math.max(0, total - advance).toFixed(2);
+}
+
+document.getElementById("advTotalPayment")
+  .addEventListener("input", updateAdvanceBalance);
+
+document.getElementById("advAdvancePayment")
+  .addEventListener("input", updateAdvanceBalance);
+
+function generateAdvanceBill() {
+  const billNo = document.getElementById("advBillNo").value;
+  const bookingDate = document.getElementById("advBookingDate").value;
+  const customer = document.getElementById("advCustomerName").value.trim();
+  const mobile = document.getElementById("advCustomerMobile").value.trim();
+  const checkIn = document.getElementById("advCheckIn").value;
+  const checkOut = document.getElementById("advCheckOut").value;
+  const totalText = document.getElementById("advTotalPayment").value;
+  const advanceText = document.getElementById("advAdvancePayment").value;
+
+  const total = Number(totalText);
+  const advance = Number(advanceText);
+
+  const message = document.getElementById("advBillMessage");
+  message.classList.add("hidden");
+  message.classList.remove("danger-notice");
+
+  function error(text) {
+    message.textContent = text;
+    message.classList.remove("hidden");
+    message.classList.add("danger-notice");
+  }
+
+  if (!bookingDate || !customer || !mobile || !checkIn || !checkOut ||
+      totalText === "" || advanceText === "") {
+    error("कृपया सभी ज़रूरी जानकारी भरें।");
+    return;
+  }
+
+  if (!Number.isFinite(new Date(checkIn).getTime()) ||
+      !Number.isFinite(new Date(checkOut).getTime()) ||
+      new Date(checkOut) <= new Date(checkIn)) {
+    error("Check-out का समय, Check-in के समय के बाद होना चाहिए।");
+    return;
+  }
+
+  if (!Number.isFinite(total) || !Number.isFinite(advance) ||
+      total < 0 || advance < 0 || advance > total) {
+    error("Advance Payment, Total Payment से अधिक नहीं हो सकता।");
+    return;
+  }
+
+  const balance = total - advance;
+  const preview = document.getElementById("advanceBillPreview");
+
+  preview.innerHTML = `
+    <div id="advancePrintArea"
+      style="max-width:700px;margin:20px auto;padding:24px;
+      border:1px solid #ccc;background:white;color:#222;font-family:Arial,sans-serif;">
+
+      <h2 style="text-align:center;margin-bottom:5px;">HOTEL KRISHNAM</h2>
+      <p style="text-align:center;margin-top:0;">
+        Contact: 9630918592 / 8823888592
+      </p>
+
+      <hr>
+      <h3 style="text-align:center;">ADVANCE BOOKING BILL</h3>
+
+      <p><b>Bill Number:</b> ${esc(billNo)}</p>
+      <p><b>Booking Date:</b> ${esc(bookingDate)}</p>
+      <p><b>Customer Name:</b> ${esc(customer)}</p>
+      <p><b>Customer Mobile:</b> ${esc(mobile)}</p>
+      <p><b>Check-in:</b> ${esc(checkIn.replace("T", " "))}</p>
+      <p><b>Check-out:</b> ${esc(checkOut.replace("T", " "))}</p>
+
+      <hr>
+      <p><b>Total Payment:</b> ${money(total)}</p>
+      <p><b>Advance Payment Received:</b> ${money(advance)}</p>
+      <p><b>Balance Payment:</b> ${money(balance)}</p>
+
+      <p style="margin-top:30px;text-align:center;">
+        Thank you for choosing Hotel Krishnam!
+      </p>
+    </div>
+
+    <button type="button" class="primary"
+      onclick="printAdvanceBill()">🖨️ Print Advance Bill</button>
+  `;
+
+  const counter = Number(
+    localStorage.getItem("hotelKrishnamAdvanceBillCounter") || "1"
+  );
+
+  localStorage.setItem(
+    "hotelKrishnamAdvanceBillCounter",
+    String(counter + 1)
+  );
+
+  setAdvanceBillNumber();
+  preview.scrollIntoView({ behavior: "smooth" });
+}
+
+function printAdvanceBill() {
+  const bill = document.getElementById("advancePrintArea");
+
+  if (!bill) {
+    alert("पहले Advance Bill Generate करें।");
+    return;
+  }
+
+  const w = window.open("", "_blank");
+
+  if (!w) {
+    alert("Print करने के लिए browser में pop-ups allow करें।");
+    return;
+  }
+
+  w.document.write(`
+    <!DOCTYPE html>
+    <html lang="hi">
+    <head>
+      <meta charset="UTF-8">
+      <title>Hotel Krishnam Advance Bill</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; color: #222; }
+        hr { border: 0; border-top: 1px solid #ccc; }
+        @media print { body { padding: 0; } }
+      </style>
+    </head>
+    <body>${bill.outerHTML}
+      <script>
+        window.onload = function() {
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+}
+
+setAdvanceBillNumber();
+setAdvanceBookingDate();
+updateAdvanceBalance();
+
 
 function fillRoomOptions() {
   const select = document.getElementById("room");
